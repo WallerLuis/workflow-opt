@@ -1,0 +1,9 @@
+.DS_Store
+*.sync-conflict-*
+
+# Read-only symlink to the Obsidian vault. Local convenience, never committed.
+/vault
+
+# Personal, machine-local agent notes.
+CLAUDE.local.md
+.claude/settings.local.json

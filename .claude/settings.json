@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(vault/**)",
+      "Write(vault/**)",
+      "Edit(//Users/luis/luis_obsidian_vault/**)",
+      "Write(//Users/luis/luis_obsidian_vault/**)",
+      "Read(vault/.obsidian/**)",
+      "Read(vault/.trash/**)"
+    ],
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(readlink:*)",
+      "Bash(./.claude/skills/verify-repo/check.sh)"
+    ]
+  }
+}
