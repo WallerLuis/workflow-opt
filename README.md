@@ -14,10 +14,10 @@ SYSTEM.md            verified current state of the machine
 GLOSSARY.md          ubiquitous language + Obsidian vault conventions
 specs/               per-domain invariants and verified state (steady state)
 changes/             one file per workflow change (the diff), BACKLOG.md ranks candidates
-notes/              teaching notes, vault-formatted, visible in Obsidian
+notes/               notes about this repo's own system (general knowledge goes in the vault)
 .claude/rules/       path-scoped agent rules
 .claude/skills/      agent procedures
-vault -> ~/luis_obsidian_vault   read-only symlink, gitignored
+vault -> ~/luis_obsidian_vault   symlink, gitignored, read-by-default
 ```
 
 ## Loop
@@ -28,6 +28,12 @@ vault -> ~/luis_obsidian_vault   read-only symlink, gitignored
 4. Fold durable facts into `specs/<domain>.md` and `SYSTEM.md`; `git mv` the change to `changes/archive/`.
 
 Specs are the steady state. Changes are the diff. Neither is a wishlist — `BACKLOG.md` is.
+
+## Boundary with the Obsidian vault
+
+The vault is the knowledge base. General knowledge — a tool, a concept, a technique — goes into its
+**topical vault folder**, beside its siblings, under the owning MOC. Only notes about this repo's own
+system live in `notes/`. Routing is by subject, not by who wrote the note.
 
 ## Boundary with `~/devSetup`
 
@@ -41,4 +47,5 @@ ln -s ~/luis_obsidian_vault vault
 ln -s "$PWD" "$HOME/luis_obsidian_vault/300 Resources - future/340 Workflow Documentation - Home lab/workflow-opt"
 ```
 
-First link gives agents read-only vault access. Second makes this repo browsable in Obsidian.
+First link lets agents read and search the vault from inside the repo. Second makes this repo's
+markdown browsable and wikilinkable inside Obsidian.

@@ -33,8 +33,8 @@ echo "4. spec sections"
 for f in specs/*.md; do
   [ "$f" = "specs/README.md" ] && continue
   miss=""
-  for s in '^## Current' '^## Invariants' '^## Gaps'; do
-    grep -q "$s" "$f" || miss="$miss $(echo "$s" | tr -d '^#' )"
+  for s in Current Invariants Gaps; do
+    grep -q "^## $s\$" "$f" || miss="$miss $s"
   done
   [ -z "$miss" ] && pass "$f" || fail "$f missing section(s):$miss"
 done
@@ -44,14 +44,13 @@ for f in changes/[0-9]*.md changes/archive/[0-9]*.md; do
   [ -f "$f" ] || continue
   miss=""
   for s in Problem Baseline Options Decision Tasks Verification Outcome; do
-    grep -q "^## $s" "$f" || miss="$miss $s"
+    grep -q "^## $s\$" "$f" || miss="$miss $s"
   done
   grep -q '^- status: ' "$f" || miss="$miss status"
   [ -z "$miss" ] && pass "$f" || fail "$f missing:$miss"
 done
 
 echo "6. relative links resolve"
-bad=0
 md_files | while read -r f; do
   d=$(dirname "$f")
   sed -n 's/.*](\([^)#][^)]*\)).*/\1/p' "$f" | while read -r link; do
@@ -65,7 +64,6 @@ md_files | while read -r f; do
 done | tee /tmp/wo-links.$$ >/dev/null
 if [ -s /tmp/wo-links.$$ ]; then cat /tmp/wo-links.$$; fails=$((fails + 1)); else pass "no broken relative links"; fi
 rm -f /tmp/wo-links.$$
-[ "$bad" -eq 0 ] || fails=$((fails + 1))
 
 echo "7. secret scan (tracked files only)"
 hits=$(git ls-files -z 2>/dev/null | xargs -0 grep -InE \

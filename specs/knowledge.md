@@ -36,12 +36,20 @@ Obsidian vault, its sync, and the linkage between vault and this repo.
 - Vault `300 Resources - future/340 Workflow Documentation - Home lab/workflow-opt` → repo root.
   Makes repo markdown browsable and wikilinkable inside Obsidian. Obsidian skips dot-directories,
   so `.git/` and `.claude/` stay invisible.
-- Agent-authored notes go to `notes/` in the repo, never directly into the vault: version-controlled,
-  reviewable in a diff, and immune to Syncthing conflict files.
+- Notes are routed by **subject, not authorship**: general knowledge (a tool, a concept, a technique)
+  goes into its topical vault folder next to its siblings, under the owning MOC; notes about this
+  repo's own system stay in `notes/`. Vault is the knowledge base; the repo is not a second one.
 
 ## Invariants
 
-- Agents never write inside `~/luis_obsidian_vault`. Enforced by deny rules, not by prose.
+- Agents never write inside `~/luis_obsidian_vault` **unless explicitly asked for that path**.
+  Enforcement is partial and tool-specific: the `Edit(vault/**)` deny rule and the `PreToolUse` hook
+  in `.claude/settings.json` bind Claude Code only. Every other agent (Codex, opencode, omp, Copilot)
+  reads neither, so for them this is prose. Verified 2026-09-10: an omp session wrote to the vault
+  unblocked.
+- A note written into the vault is registered in its owning MOC in the same action. Retrieval here is
+  by MOC link, not by tag; an unlinked note is unfindable.
+- Vault files are outside git. Any vault write is stated explicitly in chat, with the path.
 - Vault is never bulk-read into context. Grep for the note, read the section — just-in-time retrieval.
 - New vault-facing notes match the observed convention exactly (filename, H1, 7-key frontmatter,
   full-path wikilinks). Copy the shape from `901 Template/920 template permanent note.md`.
@@ -61,3 +69,6 @@ Obsidian vault, its sync, and the linkage between vault and this repo.
    note, no PARA/GTD/Zettelkasten method note, no Dataview/Templater usage doc.
 5. Several notes still contain unrendered `<% tp… %>` Templater syntax.
 6. `Prompt - Prompt Engineering MOC.md` links only into `.trash/` → broken.
+7. The vault write guard binds Claude Code only (`.claude/settings.json` deny rule + `PreToolUse`
+   hook). Codex, opencode, omp and Copilot read neither. A tool-agnostic guard would have to be a
+   git pre-commit hook plus filesystem permissions, not agent config.

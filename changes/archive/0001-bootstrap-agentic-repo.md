@@ -3,7 +3,7 @@
 - status: done
 - domain: specs/agent-stack.md, specs/knowledge.md
 - opened: 2026-09-05
-- closed: 2026-09-05
+- closed: 2026-09-13
 
 ## Problem
 
@@ -101,9 +101,14 @@ Prior knowledge in the vault:
 ## Decision
 
 `AGENTS.md` canonical, `CLAUDE.md` imports it. Spec-anchored SDD, hand-rolled, OpenSpec-shaped
-(`specs/` + `changes/` + `changes/archive/`). Three-tier context budget. Vault reachable read-only
-through a gitignored symlink; repo visible in Obsidian through a reverse symlink; agent-authored
-notes land in `notes/`, never in the vault.
+(`specs/` + `changes/` + `changes/archive/`). Three-tier context budget. Vault reachable through a
+gitignored symlink; repo visible in Obsidian through a reverse symlink.
+
+**Revised 2026-09-13** (Axis 4, superseded by Luis): notes route by **subject, not authorship**.
+General knowledge goes into its topical vault folder under the owning MOC; `notes/` holds only notes
+about this repo's own system. The original "all agent-authored notes land in `notes/`" rule optimised
+for git history and lost retrieval: the vault finds notes by MOC link, and no MOC points at
+`workflow-opt/notes/`. Topic placement wins over authorship placement.
 
 ## Tasks
 
@@ -117,7 +122,7 @@ notes land in `notes/`, never in the vault.
 - [x] `.claude/settings.json` — vault write denied
 - [x] `.claude/rules/{specs,changes,vault}.md` — path-scoped
 - [x] `.claude/skills/{new-change,vault-note,verify-repo}/SKILL.md`
-- [x] `notes/` seeded with the architecture note, vault-formatted
+- [x] `notes/` — kept for repo-system notes only; the architecture note moved to the vault (see Outcome)
 - [x] `.gitignore`, `git init`, both symlinks
 
 ## Verification
@@ -134,4 +139,49 @@ under Memory files.
 
 ## Outcome
 
-See the run log at the bottom of this file after execution.
+Executed 2026-09-05 → 2026-09-13. `./.claude/skills/verify-repo/check.sh` exits 0 on 9 gates.
+
+### Measured delta
+
+| Metric | Baseline | After |
+| --- | --- | --- |
+| Agent-readable project context | 20 lines, 1 file, 0 verified machine facts | `AGENTS.md` 107 lines + 5 specs + `SYSTEM.md`, every machine claim traced to a path or command |
+| Reusable agent assets | 1 (`~/.claude/commands/write-ticket.md`) | 3 skills, 3 path-scoped rules, 1 hook, 1 verification script |
+| Verification | none | 9-gate `check.sh`, negative-tested against 3 injected defects |
+| Vault coverage of SDD | 3-line stub in `Agentic Coding - AI Coding MOC.md` | full note, linked from that stub |
+| Repo reproducibility | untracked directory | git, 1 commit, 2 symlinks documented in `README.md` |
+
+### Verified, not assumed
+
+- Context-file resolution: `claude -p "list loaded memory files"` returned `CLAUDE.md` **and**
+  `AGENTS.md` → the `@AGENTS.md` import works; Claude Code alone would not have read `AGENTS.md`.
+- The gate catches real defects: injected a dangling link, a renamed spec heading, and a deleted
+  symlink. Two were caught; the heading was **not**, because `grep -q '^## Invariants'` prefix-matched
+  `## Invariants-broken`. Fixed to `^## $s$`, re-tested, 3/3 caught.
+- Hook: 7 unit cases pass (blocks `Write`/`Edit` by path and mutating Bash; allows reads).
+
+### Surprises
+
+1. **`Write(...)` deny rules are inert.** Claude Code emitted: *"only `Edit(path)` rules are matched
+   by file permission checks."* The original settings.json carried both; the `Write` entries did nothing.
+2. **The guard is tool-specific, not repo-wide.** `.claude/settings.json` binds Claude Code only. An
+   omp session wrote to the vault unblocked on 2026-09-10. The invariant in `specs/knowledge.md` was
+   overstated and has been corrected; filed as `knowledge#7`.
+3. **Copy-drift appeared within five days, in this repo.** A ChatGPT-app session mirrored
+   `.claude/skills/` into `.agents/skills/` and `.codex/` by string-replacing `.claude` → `.Codex`,
+   producing a documented command path that does not exist and a sentence stating the inverse of what
+   the gate checks. Removed 2026-09-12. This is the strongest available argument for one canonical
+   file plus symlinks, and against per-tool copies — the exact thesis of Axis 1.
+4. **Authorship-based note routing was wrong.** See the revised Decision.
+
+### Folded into
+
+- `specs/agent-stack.md` — context-file resolution table, three-tier budget, gaps 1–7
+- `specs/knowledge.md` — vault conventions, subject-routing, corrected enforcement invariant, gap 7
+- `SYSTEM.md` — full machine state and 6 hygiene flags
+- `changes/BACKLOG.md` — 20 ranked candidates derived from the gaps
+
+### Open, carried to the backlog
+
+A tool-agnostic vault guard (git pre-commit hook + filesystem permissions) — agent config cannot
+provide it. A 10th gate asserting mirrored assets are symlinks, not copies.

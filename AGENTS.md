@@ -20,7 +20,7 @@ Artifacts here are documentation + config + scripts. There is no application to 
 | `specs/` | reference: per-domain invariants + verified current state | on demand |
 | `changes/` | decision log: one file per workflow change | on demand |
 | `changes/BACKLOG.md` | ranked candidate changes | on demand |
-| `notes/` | teaching notes in Obsidian-vault format | on demand |
+| `notes/` | explanation: notes about **this repo's own system** only | on demand |
 | `.claude/rules/` | path-scoped rules | when touching matching paths |
 | `.claude/skills/` | procedures | when invoked / relevant |
 | `vault` | read-only symlink → Obsidian vault (gitignored) | never auto |
@@ -60,14 +60,32 @@ Skip the change file only for typo/format fixes. Anything that alters machine be
 
 ## Obsidian vault access
 
-- `./vault` is a symlink to `/Users/luis/luis_obsidian_vault`. **Read-only.** Writes are denied by
-  `.claude/settings.json`; do not attempt to bypass.
+`./vault` is a symlink to `/Users/luis/luis_obsidian_vault`. The vault is the home of Luis's
+knowledge; this repo is not a second knowledge base.
+
 - Vault holds ~2240 notes. Never bulk-read. Grep for the specific note, read the section.
 - Vault contains plaintext secrets (see `SYSTEM.md` → Hygiene). Never copy vault content into this
   repo without scanning for keys.
 - Ignore `.trash/`, `.obsidian/`, `*.sync-conflict-*.md`, `Untitled*.md`.
-- To write into the vault: put the note in `notes/`. Obsidian sees it through the reverse symlink at
-  `300 Resources - future/340 Workflow Documentation - Home lab/workflow-opt`.
+
+### Where a note goes
+
+| Subject | Location |
+| --- | --- |
+| General knowledge — a tool, a concept, a technique | the **topical vault folder**, next to its siblings, under the owning MOC. e.g. tmux → `600 Knowledge/Software-IT - General/linux - Unix/` |
+| This repo's own system — its contract, its structure, its verification | `notes/` in this repo |
+
+Rule: a note goes where its readers look for it. Topic first, not authorship. Writing a general
+knowledge note into `notes/` buries it in a folder no MOC points at.
+
+### Writing into the vault
+
+- Match the observed convention exactly — filename, H1, 7-key frontmatter, full-path wikilinks.
+  Copy the shape from `901 Template/920 template permanent note.md`; see `GLOSSARY.md`.
+- Register the note in its owning MOC by adding a wikilink; an unlinked note is unfindable here,
+  because retrieval is by MOC, not by tag.
+- Never rewrite or restructure an existing note beyond the edit you were asked for.
+- Vault files are outside git. State clearly in chat which vault paths you wrote.
 
 ## Output style
 
@@ -85,4 +103,5 @@ Luis is learning the field top-to-bottom. For any non-trivial recommendation:
 - Link to what he already knows: grep `./vault` for the relevant note and cite its path.
 - Teach the fundamental, then the mechanism, then the implementation. Never only the command.
 
-Long explanations belong in `notes/` (vault-visible), not in chat and not in this file.
+Long explanations belong in a note, not in chat and not in this file. General topic → topical vault
+folder. About this repo → `notes/`.
