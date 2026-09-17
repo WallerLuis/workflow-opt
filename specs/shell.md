@@ -4,7 +4,13 @@ zsh interactive shell, prompt, aliases, toolchain version managers.
 
 ## Current
 
-- zsh. `~/.zshrc` is a symlink → `~/devSetup/shell/zsh/.zshrc` — the only symlink `devSetup` applied.
+- zsh. `~/.zshrc` → `~/devSetup/shell/zsh/.zshrc`, `~/.zshenv` → `~/devSetup/shell/zsh/.zshenv`
+  (both symlinks; the only two `devSetup` applies to `$HOME` directly).
+- `~/.zshenv` holds `EDITOR=nvim` and `VISUAL=nvim` and nothing else. Env only, no init blocks:
+  it is read by every zsh, including scripts and `ssh host cmd` (`changes/archive/0002-*`).
+  Consumers of those vars: omp `Ctrl+G` (`app.editor.external`, reads `VISUAL` then `EDITOR`,
+  edits `$TMPDIR/omp-editor-<n>.omp.md`, `:wq` applies / `:cq` discards), git (no `core.editor` set,
+  so it falls through `VISUAL` → `EDITOR`), `crontab -e`.
 - oh-my-zsh, `plugins=(git)`, theme `robbyrussell`.
 - Prompt loaded **twice**: powerlevel10k theme + instant-prompt + `~/.p10k.zsh` (87 KB), then
   `eval "$(starship init zsh)"` later in the file. Starship wins; p10k work is dead cost.
@@ -21,6 +27,8 @@ zsh interactive shell, prompt, aliases, toolchain version managers.
 ## Invariants
 
 - `~/.zshrc` stays a symlink into `devSetup`. Editing the live file directly is a defect.
+- `EDITOR`/`VISUAL` are exported from `.zshenv` only. Re-exporting them in `.zshrc` (interactive-only)
+  is a defect: non-interactive and remote-command shells would diverge.
 - Exactly one prompt renderer initialised.
 - Exactly one authoritative Node manager; `which node` must be predictable from the directory alone.
 - Aliases that shadow a real binary (`cat`, `grep`) must not be assumed present by scripts. Scripts

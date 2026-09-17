@@ -1,5 +1,8 @@
 ---
+description: Reading from and writing into the Obsidian vault — retrieval by MOC, secret hazard, write conventions.
 paths:
+  - "vault/**"
+globs:
   - "vault/**"
 ---
 

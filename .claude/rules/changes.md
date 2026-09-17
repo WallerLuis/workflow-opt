@@ -1,5 +1,8 @@
 ---
+description: How to write a changes/NNNN-slug.md decision file, and what to fold where on completion.
 paths:
+  - "changes/**/*.md"
+globs:
   - "changes/**/*.md"
 ---
 

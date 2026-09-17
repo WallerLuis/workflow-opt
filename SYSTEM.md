@@ -1,98 +1,68 @@
-# SYSTEM.md — current machine state
+# SYSTEM.md — machine state
 
-Reference. Verified 2026-09-05 by read-only inspection of the live filesystem. Not auto-loaded.
-When a `changes/` file lands, update the affected section here and in the matching `specs/*.md`.
+Machine-wide snapshot: what is installed, what is retired, what is a hazard. Per-domain detail lives in
+`specs/*.md`; when the two disagree, re-verify against the machine and fix both. Not auto-loaded.
 
 Machine: MacBook, Apple M4 Pro, Darwin 24.2.0 (macOS), arm64.
 
-## Substrate
+## Stack of record
 
-- Homebrew at `/opt/homebrew`. ~155 formulae, ~50 casks.
-- Declarative manifest: `~/devSetup/Brewfile` (216 lines, includes ~100 `vscode "…"` extension lines).
-- Toolchains: node 26.8.1 (brew) **and** v22.18.0 (nvm) **and** fnm; python 3.14.7 (brew) + pyenv 3.13.7; `uv`.
-  No Go, no Rust. → three Node managers, `node` is nondeterministic.
+Verified 2026-09-17 unless the row says otherwise.
 
-## Shell
+| Layer | In use | Config location | Managed by devSetup? |
+|---|---|---|---|
+| Agent harness | omp (`~/.omp`) — `approvalMode: write`, model `anthropic/claude-opus-5`, `steeringMode: one-at-a-time`, `vault.enabled: true` | `~/.omp/agent/config.yml` (545 B) | no |
+| Agent harness | Claude Code CLI 2.1.236 — `opus[1m]`, effort medium, vim mode, custom statusline, auto-memory off | `~/.claude/settings.json` | no |
+| Model providers | Claude (`anthropic`), Codex (`openai`) | provider credentials | no |
+| Keyboard | Karabiner-Elements, active profile `Neo_QWERTZ_onlyMod3` (Neo2 mod3 + mod4 Home/End + both-shifts caps) | `~/.config/karabiner/karabiner.json` (1004 KB, 3 profiles) | **no** |
+| Terminal | Ghostty 1.3.1 — `theme = dark:Material Darker,light:Material`, `macos-option-as-alt = left`, `shell-integration = zsh` + `ssh-env,ssh-terminfo`, `command = tmux new-session -A -s dev` | `~/.config/ghostty/config` → `devSetup/config/ghostty/config` (1237 B) | **yes** |
+| Multiplexer | tmux 3.7c — `xterm-ghostty:RGB:extkeys` via `terminal-features`, `focus-events on`, `set-clipboard on`, `allow-passthrough on`, `extended-keys always`; tpm, resurrect + continuum (restore on, 5-min), fingers (tpm-owned binary), open, yank; vim-tmux-navigator root binds | `~/.config/tmux/tmux.conf` → `devSetup/config/tmux/tmux.conf` (3553 B) | **yes** |
+| Editor | VS Code + VSCodeVim (~100 extensions) | `~/Library/Application Support/Code/User/{settings,keybindings,mcp}.json` | no |
+| Editor | nvim 0.12.5 (`$EDITOR`/`$VISUAL`), vim 9.1 (Apple) | **no `~/.config/nvim`, no `~/.vimrc`** | n/a |
+| Shell | zsh + oh-my-zsh (`plugins=(git)`) | `~/.zshrc`, `~/.zshenv` → `devSetup/shell/zsh/` | yes (2 files) |
+| Browser | Brave + Vimium (15 extensions, `Default` profile) | browser-profile storage | no |
+| Desktop | Raycast (3 ext.), AltTab, Rectangle, Stats, Wispr Flow | app-private storage | no |
+| Files | Nextcloud, self-hosted | config not found at either documented path `[UNVERIFIED]` | no |
+| Second brain | Obsidian vault `~/luis_obsidian_vault`, ~2240 notes, **Syncthing**-synced, 60+ plugins | vault + `.obsidian/` | no |
+| Toolchains | node 26.8.1 (brew) **and** v22.18.0 (nvm) **and** fnm; python 3.14.7 (brew) + pyenv 3.13.7; `uv`. No Go, no Rust | — | Brewfile only |
+| Substrate | Homebrew `/opt/homebrew`, ~155 formulae / ~50 casks; `jq` at `/usr/bin/jq` (Apple) | `~/devSetup/Brewfile` (216 lines, ~100 `vscode` lines) | yes |
+| Dotfiles | `~/devSetup`, `git@github.com:WallerLuis/devSetup.git`, hand-rolled `link()` | `install.sh` | — |
 
-- zsh. `~/.zshrc` is a symlink → `~/devSetup/shell/zsh/.zshrc` (the only link `devSetup` ever applied).
-- oh-my-zsh, `plugins=(git)` only. No autosuggestions, no syntax-highlighting, no fzf-tab.
-- Prompt: powerlevel10k sourced (`~/.p10k.zsh`, 87 KB) **then** `starship init zsh`. Starship wins;
-  the p10k instant-prompt block and config are dead startup cost. No `~/.config/starship.toml`.
-- Modern CLI aliases: `eza`, `bat`, `rg`, `lazygit`, `zoxide`, `fzf`, `git-delta`.
-- `move()` = fzf file pick → `zi` dir pick → `mv`.
-- `~/.zprofile` (brew shellenv, `~/.local/bin`, Obsidian CLI path) is **not** managed by `devSetup`.
+`~/.local/bin/`: `claude-swap`/`cswap` (aliased `cs`), `gittum`, `kb_2_vanilla` / `kb_2_neo_mod3` /
+`kb_2_neo_full` (Karabiner profile switchers), `hf`, `tiny-agents`.
 
-## Terminal / multiplexer
+**Unmanaged live state** — lost on a wipe: `~/.zprofile`, `~/.gitconfig` (diverged: aliases +
+`push.autoSetupRemote`), `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*`, `~/.omp/*`,
+`~/.local/bin/*`, VS Code settings/keybindings/mcp, every desktop app's preferences, Vimium, Raycast.
+→ ~90 % of the machine is not reproducible.
 
-- Installed: Ghostty (no config), iTerm2, Warp. Warp has telemetry + cloud conversation storage **on**.
-- tmux: `~/.tmux.conf` is 3 lines (vi mode, mouse, 100k history). No tpm, no prefix remap,
-  no session picker. → no session-persistence story.
+## Retired — installed, not in the workflow
 
-## Editors
+Remove from the machine, then delete the row.
 
-- VS Code + VSCodeVim (leader `space`, `jk`→Esc, easymotion), relative numbers, format-on-save/prettier,
-  JetBrains Mono, telemetry off. ~100 extensions incl. `asvetliakov.vscode-neovim`.
-- **No `~/.config/nvim`** — vim keybindings everywhere (VS Code, Claude Code `editorMode: vim`, tmux,
-  Obsidian vimrc-support) but no actual Neovim config. `vscode-neovim` therefore unusable.
-- No Cursor. Windsurf installed but stale. No JetBrains.
+| Tool | Why retired | Since |
+|---|---|---|
+| iTerm2, Warp | Ghostty is the emulator of record. Warp also ships telemetry + cloud conversation storage | 2026-09-17 |
+| Windsurf | stale; VS Code + nvim cover editing | 2026-09-17 |
+| opencode, copilot-cli, pi-coding-agent, devin-desktop | omp + Claude Code CLI are the harnesses | 2026-09-17 |
+| powerlevel10k (theme + instant prompt + 87 KB `~/.p10k.zsh`) | starship initialises later in `.zshrc` and wins; p10k work is dead startup cost | 2026-09-17 |
+| two of three Node managers (brew / nvm / fnm) | `node` is nondeterministic; one must own it. Which one: undecided (`specs/shell.md` gap 2) | — |
+| obsidian-git, obsidian-livesync, remotely-save, local-backup | Syncthing owns the vault; four mechanisms over one folder is a conflict surface | 2026-09-17 |
+| `vscode-neovim` **or** VSCodeVim | both register VS Code's `type` command; only one can run (`specs/editor.md` gap 2) | — |
+| MCP: `n8n`, `dbhub`, `appwrite-docs` | fragmented per agent and per project, no shared set; keep only what is used | — |
 
-## Agent stack
-
-| Tool | Config | State |
-| --- | --- | --- |
-| Claude Code 2.1.236 | `~/.claude/settings.json` | model `opus[1m]`, effort medium, vim mode, custom statusline, auto-memory **off** |
-| Codex | `~/.codex/config.toml` | one trusted project, no model config; heavy use (10 MB log db) |
-| opencode | `~/.config/opencode` | package.json only |
-| omp (this harness) | `~/.omp` | — |
-| copilot-cli, pi-coding-agent, devin-desktop | — | installed |
-
-- `~/.claude/commands/write-ticket.md` is the **only** custom command. Zero skills, zero subagents,
-  zero hooks, no user-level `~/.claude/CLAUDE.md`.
-- MCP is fragmented: Claude global → `n8n`; one Claude project → `dbhub`; VS Code → `context7`,
-  `appwrite-docs`. No shared set across agents.
-- `~/.local/bin/`: `claude-swap`/`cswap` (account switch, aliased `cs`), `gittum`,
-  `kb_2_vanilla` / `kb_2_neo_mod3` / `kb_2_neo_full` (Karabiner profile switchers), `hf`, `tiny-agents`.
-
-## Keyboard / window management
-
-- Karabiner-Elements, 1 MB config, 2 profiles: German **Neo2** emulation (mod3/mod4/layer6),
-  Tab-as-Ctrl-when-chorded, both-shifts→caps toggle. Several rules `enabled: false`.
-- Raycast (3 extensions), Rectangle, AltTab, Stats, Wispr Flow (voice).
-- No Hammerspoon, no Alfred, no yabai/aerospace/skhd, no `defaults write` automation.
-
-## Knowledge layer
-
-- Obsidian vault `~/luis_obsidian_vault`, ~2240 notes, PARA-style numeric folders
-  (`000 Index`, `100 Projects - now`, `200 Areas - longterm`, `300 Resources - future`,
-  `400 Archive`, `600 Knowledge`, `800 Daily Notes`, `901 Template`, `950 Scripts`).
-- Sync: **Syncthing** (`.stfolder/`). Also installed and redundant: obsidian-git, obsidian-livesync,
-  remotely-save, local-backup → conflict surface. 60+ community plugins (dataview, templater, tasks,
-  periodic-notes, excalidraw, latex-suite, vimrc-support, quickadd).
-- Existing agentic-coding knowledge cluster:
-  `600 Knowledge/Software-IT - General/Agentic Development - Prompting/` (5 notes, newest 2026-09-04).
-- Note conventions: see `GLOSSARY.md`.
-
-## Dotfiles repo — `~/devSetup`
-
-`git@github.com:WallerLuis/devSetup.git`, branch `main`, hand-rolled `link()` symlink helper
-(not chezmoi/stow/yadm). **Broken and abandoned ~5 months:**
-
-- `install.sh` references `./configs/`, `./scripts/*`, `./vscode-extensions.txt` — none exist
-  (repo has `config/`, `scripts/bin/`, extensions live in the Brewfile).
-- `docs/{architecture,bootstrap,recovery}.md`, `shell/{aliases,exports}.sh`, `secrets/README.md`,
-  and `.gitignore` are all **0 bytes**.
-- Managed: `Brewfile`, `shell/zsh/.zshrc` (live symlink), `config/{git,nvim,tmux,raycast,ssh}`.
-- **Unmanaged live state:** `~/.zprofile`, `~/.gitconfig` (diverged: aliases + `push.autoSetupRemote`),
-  `~/.tmux.conf`, `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*`, `~/.local/bin/*`,
-  VS Code `settings.json`/`mcp.json`. → ~90 % of the machine is not reproducible.
-
-## Hygiene flags
+## Hygiene
 
 1. `~/Library/Application Support/Code/User/mcp.json` embeds a **context7 API key in plaintext**.
-2. Vault note `100 Projects - now/150 Own Projects-wishlist/AI agents/AI agents - MOC.md` contains
-   what look like **live OpenAI + Telegram API keys**; `Windows to linux switch.md` holds a Brave sync phrase.
-3. `~/devSetup/.gitignore` is empty → nothing ignored in the dotfiles repo.
-4. Warp: telemetry + cloud conversation storage enabled.
-5. `~/.claude/statusline-command.sh` depends on `jq`; `jq` was not found in the brew formula list. `[UNVERIFIED]`
-6. Unmanaged secret files exist under `~/freelancing/secrets/`, `~/home/luis/italysasse/secrets/`,
+2. Vault note `100 Projects - now/150 Own Projects-wishlist/AI agents/AI agents - MOC.md` contains what
+   look like **live OpenAI + Telegram API keys**; `Windows to linux switch.md` holds a Brave sync phrase.
+   Rotate and purge.
+3. ~~`~/devSetup/.gitignore` is empty~~ — closed 2026-09-15: 24 lines, denies `secrets/*`, `*.pem`,
+   `*.key`, `id_rsa`, `id_ed25519`, `.env`, `*.swp`, `.DS_Store`.
+4. Warp: telemetry + cloud conversation storage enabled (retire the app to close this).
+5. ~~`jq` missing for `~/.claude/statusline-command.sh`~~ — closed 2026-09-17: `/usr/bin/jq` exists
+   (Apple-shipped, absent from the brew formula list).
+6. Unmanaged secret files under `~/freelancing/secrets/`, `~/home/luis/italysasse/secrets/`,
    `tum-moodle-downloader/credentials.json`, `ItalySasseRemarke/.env.production`. Contents not read.
+7. Karabiner config (1 MB) and every desktop-app preference are unmanaged → the keyboard layer, which
+   the whole workflow rests on, cannot be rebuilt.

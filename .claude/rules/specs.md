@@ -1,5 +1,9 @@
 ---
+description: Editing specs/*.md and SYSTEM.md — what is, never what should be; gap numbering; drift rules.
 paths:
+  - "specs/**/*.md"
+  - "SYSTEM.md"
+globs:
   - "specs/**/*.md"
   - "SYSTEM.md"
 ---

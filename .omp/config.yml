@@ -1,0 +1,17 @@
+# Project config for omp in workflow-opt.
+# Gates, not prose: `deny` is absolute in every approval mode (omp://approval-mode.md).
+bash:
+  patterns:
+    - pattern: "git commit*"
+      policy: prompt
+      reason: "Luis commits. Agent writes the message only."
+    - pattern: "git push*"
+      policy: deny
+      reason: "Never push from an agent session."
+    - pattern: "git reset --hard*"
+      policy: deny
+      reason: "Destructive; unwinds Luis's work."
+tools:
+  approval:
+    # eval can spawn a shell that bash.patterns does not cover (omp://approval-mode.md).
+    eval: prompt

@@ -1,107 +1,125 @@
 # AGENTS.md — workflow-opt
 
-Canonical agent contract. Every agent (Claude Code, Codex, opencode, omp, Copilot) reads this file.
-`CLAUDE.md` imports it. Do not duplicate content into other agent files.
+Canonical agent contract. omp loads this file natively; `CLAUDE.md` imports it for the Claude Code CLI.
+Never duplicate content into another agent file — copy-drift appeared here within five days once
+already (`changes/archive/0001-*`, Outcome 3).
 
 ## Purpose
 
-Repo of record for Luis's personal working system on macOS: dev environment, agentic-coding setup,
-entrepreneurship and reflection workflows. Unit of work is a **workflow change**, not a feature.
-Artifacts here are documentation + config + scripts. There is no application to build.
+Repo of record for Luis's working system on macOS: dev environment, agentic-coding setup,
+entrepreneurship and reflection workflows. Documentation + decisions; no application to build.
+
+**North star: keyboard-first.** Modal editing everywhere, hands on the home row, every mouse hand-off
+treated as a cost. A change earns its place by removing keystrokes, removing hand-offs, or removing a
+failure mode — stated as a number, not a feeling.
+
+Unit of work is a **workflow change**, not a feature.
+
+## Stack of record
+
+| Layer | Tool | Spec |
+|---|---|---|
+| Agent harness | **omp** (primary), Claude Code CLI (secondary) | `specs/agent-stack.md` |
+| Model providers | Claude (`anthropic`), Codex (`openai`) | `specs/agent-stack.md` |
+| Keyboard | Karabiner + Neo2 layers, tmux keys, Vimium, Obsidian vim, VSCodeVim | `specs/keyboard.md` |
+| Terminal | Ghostty + tmux (resurrect/continuum) | `specs/terminal.md` |
+| Editors | VS Code + VSCodeVim; nvim / vim as `$EDITOR` | `specs/editor.md` |
+| Desktop | Brave + Vimium, Raycast, AltTab, Rectangle, Stats, Wispr Flow, Nextcloud | `specs/desktop.md` |
+| Second brain | Obsidian vault, Syncthing-synced | `specs/knowledge.md` |
+| Shell | zsh + devSetup symlinks | `specs/shell.md` |
+| Dotfiles | `~/devSetup` | `specs/dotfiles.md` |
+
+Anything not in this table is either retired (`SYSTEM.md` → Retired) or not part of the workflow.
 
 ## Repo map
 
-| Path | Role (Diátaxis) | Loaded when |
-| --- | --- | --- |
-| `AGENTS.md` | agent contract | every session |
-| `CLAUDE.md` | `@AGENTS.md` + Claude-only notes | every Claude session |
-| `SYSTEM.md` | reference: current machine state, verified | on demand |
-| `GLOSSARY.md` | ubiquitous language, naming rules | on demand |
-| `specs/` | reference: per-domain invariants + verified current state | on demand |
-| `changes/` | decision log: one file per workflow change | on demand |
-| `changes/BACKLOG.md` | ranked candidate changes | on demand |
-| `notes/` | explanation: notes about **this repo's own system** only | on demand |
-| `.claude/rules/` | path-scoped rules | when touching matching paths |
-| `.claude/skills/` | procedures | when invoked / relevant |
-| `vault` | read-only symlink → Obsidian vault (gitignored) | never auto |
+| Path | Role | Read when |
+|---|---|---|
+| `AGENTS.md` | this contract | always loaded |
+| `SYSTEM.md` | machine state: stack, retired tools, hygiene | before any machine claim |
+| `GLOSSARY.md` | ubiquitous language, vault naming | before naming anything |
+| `specs/<domain>.md` | verified current state · invariants · gaps | before touching that domain |
+| `changes/NNNN-slug.md` | one decision per file; `archive/` when done | when opening or closing a change |
+| `changes/BACKLOG.md` | ranked candidates | when picking work |
+| `.claude/rules/*.md` | path-scoped rules, also mounted at `.omp/rules/` | on match; read `rule://<name>` |
+| `.claude/skills/*/SKILL.md` | procedures, loaded by both harnesses | on invocation |
+| `vault` | gitignored symlink → Obsidian vault | only when the task names it |
 
-## Working agreement — spec-first, one file per change
+## Approval contract
 
-1. **Problem** — observed symptom, with evidence (command output, file path, timing). No hypotheticals.
-2. **Baseline** — measure before changing. Startup ms, keystrokes, steps, failure rate. Unmeasurable → say so.
-3. **Options** — ≥2 real alternatives, pros/cons, one recommendation. Cite sources.
-4. **Decision** — chosen option + why the others lost.
-5. **Tasks** — ordered, each independently verifiable.
+1. **Explain before acting.** For anything that alters the machine, `~/devSetup`, agent config or the
+   vault: state problem → options → chosen action → files touched, then **wait**. Read-only inspection
+   and edits to this repo's markdown proceed without asking.
+2. **Never run `git commit`, `git push` or `git reset --hard`.** Write the commit message and a summary
+   of the diff; Luis runs it. Enforced, not trusted: `.omp/config.yml` `bash.patterns` and
+   `.claude/settings.json` `permissions.deny`.
+3. Config that must reach the machine goes to `~/devSetup` as its own commit. This repo decides and
+   records; `devSetup` ships.
+
+## Working agreement — spec-anchored, one file per change
+
+1. **Problem** — observed symptom with evidence: command output, file path, timing. No hypotheticals.
+2. **Baseline** — measure first. Keystrokes, hand-offs to mouse, startup ms, steps, failure rate.
+   Keyboard claims use the keystroke-level model (`specs/keyboard.md` → Invariants). Unmeasurable → say so.
+3. **Options** — ≥2 real alternatives, pros/cons, sources. One-option tables mean the analysis was skipped.
+4. **Decision** — chosen option, and why each rejected one lost, on a named tradeoff axis.
+5. **Tasks** — ordered, each naming its file, each independently verifiable.
 6. **Verification** — the exact command or observation that proves it works.
-7. **Outcome** — filled in after execution: measured delta, what surprised us.
+7. **Outcome** — after execution: measured delta, what surprised us.
 
-Live changes in `changes/NNNN-slug.md` (template: `changes/TEMPLATE.md`).
-On completion: fold durable facts into the matching `specs/*.md`, then `git mv` the change file to
-`changes/archive/`. Specs are the steady state; changes are the diff.
+Template `changes/TEMPLATE.md`. On completion: fold durable facts into `specs/*.md`, update `SYSTEM.md`,
+drop the backlog row, `git mv` the change into `changes/archive/`. Specs are steady state; changes are
+the diff. Skip the change file only for typo/format fixes.
 
-Skip the change file only for typo/format fixes. Anything that alters machine behaviour gets one.
+## Output contract
 
-## Conventions
+Default, always:
 
-- Markdown, ATX headers, no trailing whitespace. Filenames: `kebab-case.md` in the repo.
-  Vault-facing files in `notes/` follow vault naming instead (see `GLOSSARY.md`).
-- Changes numbered zero-padded 4 digits, monotonic, never reused.
-- Config that touches the machine belongs in `~/devSetup` (the dotfiles repo), not here.
-  This repo documents and decides; `devSetup` ships. Cross-reference by path.
-- Every claim about the machine is either verified in-session or marked `[UNVERIFIED]`.
-- Never invent a measurement. Absent baseline → write `baseline: not measured`.
+- Information-dense. Grammar is subordinate to density — drop articles and copulas, fragments over
+  sentences, tables over prose.
+- Conclusion first, then evidence. Exact paths, commands, numbers.
+- No preamble, no restatement of the request, no summary of what you just did, no praise.
+- Uncertainty stated at the claim, never as a closing disclaimer.
+- Every claim about the machine, a file or a tool is verified in-session or marked `[UNVERIFIED]`.
+  Never invent a measurement; absent baseline → `baseline: not measured`.
 
-## Verification rules
+**Evaluation mode** — on explicit request only (e.g. "evaluate all potential good solutions",
+"explain", "teach"). Then go wide and deep, still dense:
+
+- Enumerate **every** viable option, including the ones not chosen and the do-nothing option.
+- Pros, cons, and the single tradeoff axis that decides it.
+- Current research and best practice: papers, specs, official docs, named practitioners, with links and
+  dates. Distinguish measured mechanism from opinion; mark model-version-dependent advice as such.
+- What top practitioners actually do, named — not anonymous consensus.
+- Link to what Luis already knows: grep `vault/` for the relevant note, cite its path.
+- Order: fundamental → mechanism → implementation → tradeoffs.
+- Long-form output belongs in a vault note under its owning MOC, not in chat and not in this repo.
+
+## Verification
+
+Before reporting any change complete:
+
+```sh
+scripts/check.sh
+```
 
 - Documentation change → re-read the file, confirm links resolve.
 - Config/script change → run it, paste real output.
 - Claim about installed tooling → `brew list`, `--version`, or read the config file. Not memory.
-- Never report a workflow as improved without a before/after number or an explicit "unmeasurable, judged by X".
+- Never report a workflow as improved without a before/after number or an explicit
+  "unmeasurable, judged by X".
+- Never edit `scripts/check.sh` to make a check pass. A wrong check is its own change.
 
-## Obsidian vault access
+## Obsidian vault
 
-`./vault` is a symlink to `/Users/luis/luis_obsidian_vault`. The vault is the home of Luis's
-knowledge; this repo is not a second knowledge base.
+`./vault` → `/Users/luis/luis_obsidian_vault`, ~2240 notes, synced by Syncthing. It is the knowledge
+base; this repo is not a second one.
 
-- Vault holds ~2240 notes. Never bulk-read. Grep for the specific note, read the section.
-- Vault contains plaintext secrets (see `SYSTEM.md` → Hygiene). Never copy vault content into this
-  repo without scanning for keys.
-- Ignore `.trash/`, `.obsidian/`, `*.sync-conflict-*.md`, `Untitled*.md`.
-
-### Where a note goes
-
-| Subject | Location |
-| --- | --- |
-| General knowledge — a tool, a concept, a technique | the **topical vault folder**, next to its siblings, under the owning MOC. e.g. tmux → `600 Knowledge/Software-IT - General/linux - Unix/` |
-| This repo's own system — its contract, its structure, its verification | `notes/` in this repo |
-
-Rule: a note goes where its readers look for it. Topic first, not authorship. Writing a general
-knowledge note into `notes/` buries it in a folder no MOC points at.
-
-### Writing into the vault
-
-- Match the observed convention exactly — filename, H1, 7-key frontmatter, full-path wikilinks.
-  Copy the shape from `901 Template/920 template permanent note.md`; see `GLOSSARY.md`.
-- Register the note in its owning MOC by adding a wikilink; an unlinked note is unfindable here,
-  because retrieval is by MOC, not by tag.
-- Never rewrite or restructure an existing note beyond the edit you were asked for.
-- Vault files are outside git. State clearly in chat which vault paths you wrote.
-
-## Output style
-
-- Extremely concise. Fragments over sentences. No preamble, no summary of what you just did.
-- Conclusion first, then evidence. Exact paths, commands, numbers.
-- Uncertainty stated at the claim, not in a disclaimer paragraph.
-
-## Learning contract
-
-Luis is learning the field top-to-bottom. For any non-trivial recommendation:
-
-- Name every viable approach, not just the chosen one.
-- Give pros/cons and the tradeoff axis that decides it.
-- Anchor to primary sources: papers, specs, official docs, named practitioners. Link them.
-- Link to what he already knows: grep `./vault` for the relevant note and cite its path.
-- Teach the fundamental, then the mechanism, then the implementation. Never only the command.
-
-Long explanations belong in a note, not in chat and not in this file. General topic → topical vault
-folder. About this repo → `notes/`.
+- Never bulk-read. Grep for the note, read the section. Ignore `.trash/`, `.obsidian/`,
+  `*.sync-conflict-*.md`, `Untitled*.md`, `.stfolder*`, `.DS_Store`.
+- **Contains plaintext secrets** (`SYSTEM.md` → Hygiene). Never copy vault content into this repo
+  without a secret scan; never echo an apparent key.
+- Read-only unless the task names a vault path. Full rules: `rule://vault`, procedure: `vault-note` skill.
+- A note goes where its readers look: general knowledge → its **topical vault folder** under the owning
+  MOC (retrieval here is by MOC link, not by tag). Register every new note in its MOC in the same action.
+- Vault files are outside git. State every vault path you touched, in chat.
