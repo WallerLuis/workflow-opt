@@ -275,3 +275,28 @@ Surprises worth keeping:
 Residual risk, deliberately accepted: inside tmux the Ghostty `ssh` wrapper sets the remote
 `TERM=xterm-ghostty` once terminfo is installed, while the local client is `tmux-256color`. If a
 remote app misbehaves, gate it in `.zshrc` with `[[ -z $TMUX ]] || unfunction ssh` after sourcing.
+
+### Addendum — 2026-09-17, after close
+
+Luis trimmed `config/ghostty/config` from 1237 B to 678 B and added doc links (not yet committed at
+time of writing; `git diff` in `~/devSetup` shows it). Removed: `font-family`, `font-size`,
+`font-thicken`, `theme`, `window-padding-x/y`, `cursor-style-blink`, and
+`command = tmux new-session -A -s dev`. Kept: `macos-option-as-alt = left`,
+`shell-integration = zsh`, `shell-integration-features = cursor,title,path,ssh-env,ssh-terminfo`.
+`ghostty +validate-config` still exits 0.
+
+Consequences checked:
+
+- Dropping `command` removes the one-shared-session problem entirely — nothing auto-attaches, so the
+  mirroring/size-clamping paragraph above is moot until a launcher comes back (BACKLOG #11).
+- Appearance reverts to Ghostty defaults, which is *better* for glyphs: the bundled JetBrains Mono
+  NF carries Nerd Font symbols, whereas the `font-jetbrains-mono` cask relied on Ghostty's
+  symbols-only fallback.
+- `shell-integration = zsh` is no longer strictly required (Ghostty now launches the login shell and
+  `detect` would find zsh) but is worth keeping: with `--shell-integration=detect` and a command
+  carrying arguments, injection was observed *not* to happen (`GHOSTTY_SHELL_FEATURES` exported, no
+  `ZDOTDIR`), so the explicit value is the safe form.
+- No tmux change: the `.zshrc` hook, `ssh-terminfo`, `RGB`/`extkeys`, `focus-events` and
+  `set-clipboard` all still hold — they do not depend on the removed keys.
+
+`SYSTEM.md` and `specs/terminal.md` were corrected to describe the 678 B file.
