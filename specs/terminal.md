@@ -6,20 +6,25 @@ Terminal emulator, multiplexer, session persistence. Keybindings live in `specs/
 
 Verified 2026-09-17.
 
-- **Ghostty 1.3.1** is the emulator of record (brew cask), configured and devSetup-managed:
-  `~/.config/ghostty/config` → `/Users/luis/devSetup/config/ghostty/config`, 1237 B, validated by
+- **Ghostty** is the emulator of record (brew cask), configured and devSetup-managed:
+  `~/.config/ghostty/config` → `/Users/luis/devSetup/config/ghostty/config`, validated by
   `ghostty +validate-config` (silent = valid). It holds only keys that differ from
-  `ghostty +show-config --default`: fonts + padding, `cursor-style-blink = false`,
-  `theme = dark:Material Darker,light:Material`, `macos-option-as-alt = left`,
-  `shell-integration = zsh`, `shell-integration-features = cursor,title,path,ssh-env,ssh-terminfo`,
-  `command = tmux new-session -A -s dev`. Defaults deliberately left alone: `term`,
-  `clipboard-write`, `cursor-style`, `clipboard-read = ask`, `clipboard-paste-protection = true`.
-- `command` is not a shell, so Ghostty cannot detect one: without the explicit
-  `shell-integration = zsh` it injects no `ZDOTDIR` and tmux panes get no integration at all.
-  Verified by launching with `--command=` and reading the tmux server environment.
-- Every Ghostty window runs the same `new-session -A -s dev` → all windows are clients of one
-  session: panes mirror and the width clamps to the smallest client. Parallel work uses tmux
-  windows/sessions, not Ghostty tabs.
+  `ghostty +show-config --default`.
+- The live file is **678 B / 4 settings**, re-verified 2026-09-17 after Luis trimmed it: it contains
+  `macos-option-as-alt = left`, `shell-integration = zsh`,
+  `shell-integration-features = cursor,title,path,ssh-env,ssh-terminfo` — and nothing else.
+  The 1237 B version recorded in `changes/archive/0003-ghostty-tmux-integration.md` (fonts, padding,
+  `cursor-style-blink`, `theme = dark:Material Darker,light:Material`,
+  `command = tmux new-session -A -s dev`) was trimmed *after* that change closed — the Outcome table
+  describes the file as landed, this bullet describes the file as kept. Appearance is now all
+  Ghostty defaults: bundled JetBrains Mono NF, default theme, 2 px padding, blinking block cursor.
+- `macos-option-as-alt = left` is load-bearing for the keyboard layer: left Option acts as Alt for
+  tmux/readline, right Option keeps macOS composition, which the Karabiner Neo2 profile depends on.
+- **No `command` line**, so Ghostty launches the login shell and nothing auto-attaches tmux: no
+  mirrored sessions, no size clamping, tmux is started by hand. `shell-integration = zsh` stays
+  explicit on purpose — `detect` was observed *not* injecting `ZDOTDIR` when the launched program
+  carries arguments (`--command="/bin/zsh -c …"` → features exported, no `ZDOTDIR`), and the
+  explicit value keeps integration working if a `command = tmux …` line ever returns.
 - Remote terminfo is Ghostty's job, not a manual step: the `ssh` wrapper from
   `shell-integration-features = ssh-terminfo` pipes `infocmp -x xterm-ghostty` into `tic -x -` on
   first connect and caches the host (`ghostty +ssh-cache --list`); `ssh-env` forwards

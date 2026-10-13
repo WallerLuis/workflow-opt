@@ -32,13 +32,13 @@ Verified 2026-09-17 by reading the live configs.
   Command-Tab). Actual binding `[UNVERIFIED]`.
 - Rectangle — window snapping. Stats — menubar metrics.
 - Wispr Flow — dictation; injects text into whatever mode is focused.
-- **Ghostty has no config** (`~/.config/ghostty/config` absent) → no `keybind`, no
-  `global:cmd+backquote=toggle_quick_terminal`, no leader sequences, `macos-option-as-alt` unset.
+- **Ghostty**: configured and devSetup-managed (`~/.config/ghostty/config` → devSetup) but **zero
+  `keybind` lines** → no `global:cmd+backquote=toggle_quick_terminal`, no leader sequences.
+  `macos-option-as-alt = left` is deliberate: left Option acts as Alt for tmux/readline, right Option
+  keeps macOS composition, which the Neo2 profile depends on
+  (`changes/archive/0003-ghostty-tmux-integration.md`).
 
 ### L3/L4 — tmux
-
-`~/.config/tmux/tmux.conf` → `/Users/luis/devSetup/config/tmux/tmux.conf`, 3553 B, devSetup-managed.
-tpm at `/opt/homebrew/opt/tpm/share/tpm/tpm`.
 
 - Prefix: default `C-b`, unchanged. `bind r` reloads the config.
 - `mode-keys vi`; `copy-mode-vi`: `v` begin-selection, `C-h/j/k/l/C-\` pane select.
@@ -59,7 +59,7 @@ tpm at `/opt/homebrew/opt/tpm/share/tpm/tpm`.
 | Obsidian | vimrc-support + codemirror-vim | `~/luis_obsidian_vault/.obsidian.vimrc`, 306 B | `H`→`^`, `L`→`$`, `<F9>`→`:nohl<CR>`, `<C-w>h`→`obcommand workspace:split-horizontal`, `jk`/`kj`→Esc in insert |
 | VS Code | **VSCodeVim** (emulator) — `vscode-neovim` also installed but unusable | `settings.json` (leader `space`, `jk`→Esc, easymotion) + `keybindings.json`, 18 entries | active |
 | Terminal editor | nvim 0.12.5 / vim 9.1 (Apple) | **no `~/.config/nvim`, no `~/.vimrc`** | stock defaults |
-| omp prompt | readline-style `tui.editor.*` only; `Ctrl+G` hands the draft to `$VISUAL` (nvim) | no `~/.omp/agent/keybindings.yml` → defaults | no modal editing in-prompt |
+| pi prompt | pi TUI editor; `Ctrl+G` (`app.editor.external`) hands the draft to `externalEditor` → `$VISUAL` (nvim) → `$EDITOR` | `~/.pi/agent/keybindings` not inspected `[UNVERIFIED]` | modal editing in-prompt `[UNVERIFIED]` |
 
 ### Known collisions
 
@@ -107,7 +107,7 @@ tpm at `/opt/homebrew/opt/tpm/share/tpm/tpm`.
 5. No Neovim config → the deepest modal surface in the stack runs on stock defaults, and
    `vscode-neovim` (which requires a real nvim config) stays unusable.
 6. Insert-mode escape differs per surface: `jk` in VS Code, `jk` **and** `kj` in Obsidian, nothing in
-   nvim/vim, nothing in omp's prompt.
+   nvim/vim; pi's prompt editor not inspected.
 7. Vimium and Raycast bindings are unversioned — both live in app-private storage, so neither survives
    a machine rebuild.
 8. No keystroke baseline exists for any task, so no keyboard change in this repo can currently be

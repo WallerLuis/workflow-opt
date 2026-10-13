@@ -21,9 +21,8 @@ Verified 2026-09-17.
   (NVIM v0.12.5).
 - **No `~/.config/nvim`, no `~/.vimrc`** (`~/.vim/` holds only `.netrwhist`).
 - `EDITOR` and `VISUAL` = `nvim`, exported from `~/.zshenv` (`changes/archive/0002-*`). Consumers:
-  omp `Ctrl+G` (`app.editor.external`, reads `VISUAL` then `EDITOR`, edits
-  `$TMPDIR/omp-editor-<n>.omp.md`, `:wq` applies / `:cq` discards), git (no `core.editor` set),
-  `crontab -e`, tmux-open's `C-o`.
+  pi `Ctrl+G` (`app.editor.external`: `externalEditor` → `$VISUAL` → `$EDITOR`), Claude Code's
+  external-editor key `[UNVERIFIED]`, git (no `core.editor` set), `crontab -e`, tmux-open's `C-o`.
 - Windsurf installed, stale, retired. No Cursor, no JetBrains.
 - Obsidian is a text surface too, with its own vim layer — see `specs/keyboard.md` and
   `specs/knowledge.md`.
@@ -33,13 +32,13 @@ Verified 2026-09-17.
 - Exactly one modal engine owns VS Code's `type` command.
 - `EDITOR`/`VISUAL` are exported from `.zshenv` only, as bare binary names (a value with spaces breaks
   tools that `exec` it as `argv[0]`).
-- Editor-specific behaviour for agent prompt drafts keys off omp's temp-file pattern
-  (`*.omp.md`), not off a wrapper command in `$VISUAL`.
+- Editor-specific behaviour for agent prompt drafts keys off the harness's temp-file pattern, not off
+  a wrapper command in `$VISUAL`. pi's pattern is `[UNVERIFIED]`; omp's `*.omp.md` is retired.
 - Any editor config that must survive a rebuild lives in `devSetup`, not in `~`.
 
 ## Gaps
 
-1. No Neovim config, while nvim is `$EDITOR`/`$VISUAL` and the target of omp's `Ctrl+G` → the editor
+1. No Neovim config, while nvim is `$EDITOR`/`$VISUAL` and the target of pi's `Ctrl+G` → the editor
    used for every prompt draft and commit message runs on stock defaults.
 2. VSCodeVim (emulator) vs vscode-neovim (embeds real nvim, needs a config): undecided; one of the two
    extensions is dead weight and the decision is coupled to gap 1.

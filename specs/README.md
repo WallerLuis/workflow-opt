@@ -13,17 +13,24 @@ Each spec has exactly three sections:
 
 Specs are mutated only by a completed change. Never edit a spec to describe a plan.
 
-`SYSTEM.md` is the machine-wide snapshot; specs are the per-domain deep view. When they disagree,
-re-verify against the machine and fix both.
+`SYSTEM.md` is the machine-wide snapshot — stack of record, retired tools, hygiene. Specs are the
+per-domain deep view. When they disagree, re-verify against the machine and fix both in one edit.
+
+Closing a gap: strike it through with a date (`~~gap~~ — closed YYYY-MM-DD: evidence`). Never delete or
+renumber — backlog rows reference `<spec>#<number>`.
 
 ## Domains
 
 | Spec | Covers |
-| --- | --- |
-| `agent-stack.md` | Claude Code, Codex, opencode, omp; context files, rules, skills, MCP |
-| `shell.md` | zsh, prompt, aliases, toolchain managers |
-| `terminal.md` | terminal emulators, tmux, session persistence |
+|---|---|
+| `keyboard.md` | Karabiner/Neo2, tmux keys, Vimium, Obsidian vim, VS Code vim, cross-tool collisions |
+| `terminal.md` | Ghostty, tmux, session persistence |
+| `editor.md` | VS Code, Neovim, vim, the modal engine inside each |
+| `desktop.md` | Brave, Raycast, AltTab, Rectangle, Stats, Wispr Flow, Nextcloud |
+| `nextcloud.md` | Nextcloud file structure, naming, vault reference contract |
+| `agent-stack.md` | pi + Claude Code CLI, instruction layer, gates, context budget |
 | `knowledge.md` | Obsidian vault, sync, note conventions, repo↔vault linkage |
+| `shell.md` | zsh, prompt, aliases, toolchain managers |
 | `dotfiles.md` | `~/devSetup`, reproducibility, secrets |
 
 Add a domain only when a change needs one. Empty specs are noise.

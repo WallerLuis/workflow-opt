@@ -8,9 +8,9 @@ zsh interactive shell, prompt, aliases, toolchain version managers.
   (both symlinks; the only two `devSetup` applies to `$HOME` directly).
 - `~/.zshenv` holds `EDITOR=nvim` and `VISUAL=nvim` and nothing else. Env only, no init blocks:
   it is read by every zsh, including scripts and `ssh host cmd` (`changes/archive/0002-*`).
-  Consumers of those vars: omp `Ctrl+G` (`app.editor.external`, reads `VISUAL` then `EDITOR`,
-  edits `$TMPDIR/omp-editor-<n>.omp.md`, `:wq` applies / `:cq` discards), git (no `core.editor` set,
-  so it falls through `VISUAL` → `EDITOR`), `crontab -e`.
+  Consumers of those vars: pi `Ctrl+G` (`app.editor.external`: `externalEditor` → `$VISUAL` →
+  `$EDITOR`), git (no `core.editor` set, so it falls through `VISUAL` → `EDITOR`), `crontab -e`.
+  (omp, the original 0002 target, is retired.)
 - oh-my-zsh, `plugins=(git)`, theme `robbyrussell`.
 - Prompt loaded **twice**: powerlevel10k theme + instant-prompt + `~/.p10k.zsh` (87 KB), then
   `eval "$(starship init zsh)"` later in the file. Starship wins; p10k work is dead cost.

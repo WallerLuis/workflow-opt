@@ -4,14 +4,18 @@
       "Edit(vault/**)",
       "Edit(//Users/luis/luis_obsidian_vault/**)",
       "Read(vault/.obsidian/**)",
-      "Read(vault/.trash/**)"
+      "Read(vault/.trash/**)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)"
     ],
     "allow": [
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(readlink:*)",
-      "Bash(./.claude/skills/verify-repo/check.sh)"
+      "Bash(./scripts/check.sh)",
+      "Bash(scripts/check.sh)"
     ]
   },
   "hooks": {

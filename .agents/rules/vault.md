@@ -2,8 +2,6 @@
 description: Reading from and writing into the Obsidian vault — retrieval by MOC, secret hazard, write conventions.
 paths:
   - "vault/**"
-globs:
-  - "vault/**"
 ---
 
 # Working with the Obsidian vault
@@ -25,7 +23,8 @@ this repo is not a second one.
 ## Writing
 
 Default is read-only: do not write here unless the task calls for a vault note or the user names a
-vault path. A repo-specific note belongs in `notes/` instead.
+vault path. This repo keeps no notes directory — documentation about the repo itself belongs in
+`AGENTS.md`, a spec, or a change file.
 
 When you do write:
 

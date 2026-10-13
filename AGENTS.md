@@ -1,6 +1,6 @@
 # AGENTS.md — workflow-opt
 
-Canonical agent contract. omp loads this file natively; `CLAUDE.md` imports it for the Claude Code CLI.
+Canonical agent contract. pi loads this file natively; `CLAUDE.md` imports it for the Claude Code CLI.
 Never duplicate content into another agent file — copy-drift appeared here within five days once
 already (`changes/archive/0001-*`, Outcome 3).
 
@@ -19,7 +19,7 @@ Unit of work is a **workflow change**, not a feature.
 
 | Layer | Tool | Spec |
 |---|---|---|
-| Agent harness | **omp** (primary), Claude Code CLI (secondary) | `specs/agent-stack.md` |
+| Agent harness | **pi** (`pi-coding-agent`), Claude Code CLI | `specs/agent-stack.md` |
 | Model providers | Claude (`anthropic`), Codex (`openai`) | `specs/agent-stack.md` |
 | Keyboard | Karabiner + Neo2 layers, tmux keys, Vimium, Obsidian vim, VSCodeVim | `specs/keyboard.md` |
 | Terminal | Ghostty + tmux (resurrect/continuum) | `specs/terminal.md` |
@@ -41,9 +41,21 @@ Anything not in this table is either retired (`SYSTEM.md` → Retired) or not pa
 | `specs/<domain>.md` | verified current state · invariants · gaps | before touching that domain |
 | `changes/NNNN-slug.md` | one decision per file; `archive/` when done | when opening or closing a change |
 | `changes/BACKLOG.md` | ranked candidates | when picking work |
-| `.claude/rules/*.md` | path-scoped rules, also mounted at `.omp/rules/` | on match; read `rule://<name>` |
-| `.claude/skills/*/SKILL.md` | procedures, loaded by both harnesses | on invocation |
+| `.agents/rules/*.md` | path rules; Claude auto-loads via `.claude/rules` symlink, pi reads on the pointer below | before editing a matching path |
+| `.agents/skills/*/SKILL.md` | procedures; pi native, Claude via `.claude/skills` symlink | on invocation |
+| `.pi/extensions/git-guard.ts` | pi gate: blocks commit / push / hard reset | loaded by pi after project trust |
 | `vault` | gitignored symlink → Obsidian vault | only when the task names it |
+
+## Path rules — read before editing
+
+Claude Code loads these on its own (`paths:` frontmatter). pi has no rule mechanism: **read the file
+before the first edit** to a matching path.
+
+| Editing | Read first |
+|---|---|
+| `specs/**`, `SYSTEM.md` | `.agents/rules/specs.md` |
+| `changes/**` | `.agents/rules/changes.md` |
+| anything under `vault/` | `.agents/rules/vault.md` |
 
 ## Approval contract
 
@@ -51,8 +63,8 @@ Anything not in this table is either retired (`SYSTEM.md` → Retired) or not pa
    vault: state problem → options → chosen action → files touched, then **wait**. Read-only inspection
    and edits to this repo's markdown proceed without asking.
 2. **Never run `git commit`, `git push` or `git reset --hard`.** Write the commit message and a summary
-   of the diff; Luis runs it. Enforced, not trusted: `.omp/config.yml` `bash.patterns` and
-   `.claude/settings.json` `permissions.deny`.
+   of the diff; Luis runs it. Enforced, not trusted: `.pi/extensions/git-guard.ts` (pi) and
+   `.claude/settings.json` `permissions.deny` (Claude Code).
 3. Config that must reach the machine goes to `~/devSetup` as its own commit. This repo decides and
    records; `devSetup` ships.
 
@@ -119,7 +131,8 @@ base; this repo is not a second one.
   `*.sync-conflict-*.md`, `Untitled*.md`, `.stfolder*`, `.DS_Store`.
 - **Contains plaintext secrets** (`SYSTEM.md` → Hygiene). Never copy vault content into this repo
   without a secret scan; never echo an apparent key.
-- Read-only unless the task names a vault path. Full rules: `rule://vault`, procedure: `vault-note` skill.
+- Read-only unless the task names a vault path. Full rules: `.agents/rules/vault.md`, procedure:
+  `vault-note` skill.
 - A note goes where its readers look: general knowledge → its **topical vault folder** under the owning
   MOC (retrieval here is by MOC link, not by tag). Register every new note in its MOC in the same action.
 - Vault files are outside git. State every vault path you touched, in chat.

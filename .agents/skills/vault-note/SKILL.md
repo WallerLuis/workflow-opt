@@ -7,19 +7,19 @@ description: Write a teaching or reference note in Obsidian vault format. Use wh
 
 ## Step 1 — decide where it goes
 
-Route by **subject, not authorship**:
+Route by **subject**, and everything teaching-shaped goes to the vault:
 
 | Subject | Location |
 | --- | --- |
 | General knowledge — a tool, a concept, a technique | the **topical vault folder**, beside its siblings, under the owning MOC |
-| This repo's own system — its contract, structure, verification loop | `notes/` in this repo |
+| This repo's own contract, structure or verification | not a note — `AGENTS.md`, the matching `specs/*.md`, or the change file |
 
 Find the topical folder by grepping `vault/` for existing notes on the subject, then place the new
 note in the same directory. Examples: tmux → `600 Knowledge/Software-IT - General/linux - Unix/`;
 prompting and agents → `600 Knowledge/Software-IT - General/Agentic Development - Prompting/`;
-macOS and Raycast → `300 Resources - future/340 Workflow Documentation - Home lab/`.
+macOS, Raycast, keyboard workflow → `300 Resources - future/340 Workflow Documentation - Home lab/`.
 
-A general note dropped into `notes/` is buried: no MOC points at that folder, so it is unfindable.
+A general note dropped anywhere no MOC points at is unfindable — retrieval here is by MOC link.
 
 ## Step 2 — copy the template
 

@@ -11,11 +11,11 @@ Verified 2026-09-17 unless the row says otherwise.
 
 | Layer | In use | Config location | Managed by devSetup? |
 |---|---|---|---|
-| Agent harness | omp (`~/.omp`) — `approvalMode: write`, model `anthropic/claude-opus-5`, `steeringMode: one-at-a-time`, `vault.enabled: true` | `~/.omp/agent/config.yml` (545 B) | no |
-| Agent harness | Claude Code CLI 2.1.236 — `opus[1m]`, effort medium, vim mode, custom statusline, auto-memory off | `~/.claude/settings.json` | no |
+| Agent harness | pi (`pi-coding-agent` 1.0.0) — `defaultProvider: openai-codex`, `defaultModel: gpt-5.6-terra`, package `@gotgenes/pi-anthropic-auth`; trust entry `/Users/luis/home/luis` | `~/.pi/agent/settings.json` (584 B), `trust.json` | no |
+| Agent harness | Claude Code CLI 2.1.285 — `opus[1m]`, effort medium, vim mode, custom statusline, auto-memory off | `~/.claude/settings.json` | no |
 | Model providers | Claude (`anthropic`), Codex (`openai`) | provider credentials | no |
 | Keyboard | Karabiner-Elements, active profile `Neo_QWERTZ_onlyMod3` (Neo2 mod3 + mod4 Home/End + both-shifts caps) | `~/.config/karabiner/karabiner.json` (1004 KB, 3 profiles) | **no** |
-| Terminal | Ghostty 1.3.1 — `theme = dark:Material Darker,light:Material`, `macos-option-as-alt = left`, `shell-integration = zsh` + `ssh-env,ssh-terminfo`, `command = tmux new-session -A -s dev` | `~/.config/ghostty/config` → `devSetup/config/ghostty/config` (1237 B) | **yes** |
+| Terminal | Ghostty 1.3.1 — `macos-option-as-alt = left`, `shell-integration = zsh` + `cursor,title,path,ssh-env,ssh-terminfo`; no `command`, no theme/font overrides (all Ghostty defaults) | `~/.config/ghostty/config` → `devSetup/config/ghostty/config` (678 B) | **yes** |
 | Multiplexer | tmux 3.7c — `xterm-ghostty:RGB:extkeys` via `terminal-features`, `focus-events on`, `set-clipboard on`, `allow-passthrough on`, `extended-keys always`; tpm, resurrect + continuum (restore on, 5-min), fingers (tpm-owned binary), open, yank; vim-tmux-navigator root binds | `~/.config/tmux/tmux.conf` → `devSetup/config/tmux/tmux.conf` (3553 B) | **yes** |
 | Editor | VS Code + VSCodeVim (~100 extensions) | `~/Library/Application Support/Code/User/{settings,keybindings,mcp}.json` | no |
 | Editor | nvim 0.12.5 (`$EDITOR`/`$VISUAL`), vim 9.1 (Apple) | **no `~/.config/nvim`, no `~/.vimrc`** | n/a |
@@ -32,7 +32,7 @@ Verified 2026-09-17 unless the row says otherwise.
 `kb_2_neo_full` (Karabiner profile switchers), `hf`, `tiny-agents`.
 
 **Unmanaged live state** — lost on a wipe: `~/.zprofile`, `~/.gitconfig` (diverged: aliases +
-`push.autoSetupRemote`), `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*`, `~/.omp/*`,
+`push.autoSetupRemote`), `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*`, `~/.pi/*`,
 `~/.local/bin/*`, VS Code settings/keybindings/mcp, every desktop app's preferences, Vimium, Raycast.
 → ~90 % of the machine is not reproducible.
 
@@ -44,7 +44,7 @@ Remove from the machine, then delete the row.
 |---|---|---|
 | iTerm2, Warp | Ghostty is the emulator of record. Warp also ships telemetry + cloud conversation storage | 2026-09-17 |
 | Windsurf | stale; VS Code + nvim cover editing | 2026-09-17 |
-| opencode, copilot-cli, pi-coding-agent, devin-desktop | omp + Claude Code CLI are the harnesses | 2026-09-17 |
+| omp, opencode, copilot-cli, devin-desktop | pi + Claude Code CLI are the harnesses (omp retired 2026-10-13, `changes/archive/0006-*`) | 2026-10-13 |
 | powerlevel10k (theme + instant prompt + 87 KB `~/.p10k.zsh`) | starship initialises later in `.zshrc` and wins; p10k work is dead startup cost | 2026-09-17 |
 | two of three Node managers (brew / nvm / fnm) | `node` is nondeterministic; one must own it. Which one: undecided (`specs/shell.md` gap 2) | — |
 | obsidian-git, obsidian-livesync, remotely-save, local-backup | Syncthing owns the vault; four mechanisms over one folder is a conflict surface | 2026-09-17 |

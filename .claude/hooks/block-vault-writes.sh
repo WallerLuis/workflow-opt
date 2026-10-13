@@ -29,7 +29,7 @@ case "$tool" in
   Write|Edit|MultiEdit|NotebookEdit)
     path=$(field file_path)
     if targets_vault "$path"; then
-      echo "BLOCKED: the Obsidian vault is read-only. Write the note to notes/ instead; Obsidian sees it through the reverse symlink. ($path)" >&2
+      echo "BLOCKED: the Obsidian vault is read-only to this hook. Repo documentation belongs in AGENTS.md, a spec or a change file; a real vault note needs Luis to name the path and run the write himself. ($path)" >&2
       exit 2
     fi
     ;;
@@ -42,7 +42,7 @@ case "$tool" in
     # Path is mentioned. Block only mutating constructs; reads (grep/cat/find/ls) stay allowed.
     case "$cmd" in
       *'>'*|*'tee '*|*'rm '*|*'mv '*|*'cp '*|*'sed -i'*|*'truncate'*|*'mkdir '*|*'touch '*|*'ln '*|*'chmod '*|*'dd '*)
-        echo "BLOCKED: mutating command targets the Obsidian vault, which is read-only. Write to notes/ instead. ($cmd)" >&2
+        echo "BLOCKED: mutating command targets the Obsidian vault, which is read-only to this hook. Report the intended path and content in chat; Luis runs the write. ($cmd)" >&2
         exit 2
         ;;
     esac

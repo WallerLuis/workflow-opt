@@ -1,9 +1,12 @@
-# 0003 — keyboard-first-context-restack
+# 0004 — keyboard-first-context-restack
 
-- status: in-progress
-- domain: specs/agent-stack.md, specs/terminal.md, specs/keyboard.md, specs/editor.md, specs/desktop.md, SYSTEM.md
+- status: done
+- domain: specs/agent-stack.md, specs/keyboard.md, specs/editor.md, specs/desktop.md, specs/terminal.md, specs/knowledge.md, SYSTEM.md
 - opened: 2026-09-17
-- closed:
+- closed: 2026-09-17
+
+Opened as 0003; renumbered to 0004 — `changes/archive/0003-ghostty-tmux-integration.md` landed from a
+concurrent session while this file was being written. Numbers are never reused.
 
 ## Problem
 
@@ -145,25 +148,27 @@ Locked by Luis, this session:
 
 ## Tasks
 
-- [x] `changes/0003-keyboard-first-context-restack.md` — this file
-- [ ] `specs/keyboard.md` — new: Karabiner active profile, tmux keys, Vimium, Obsidian vim, VS Code vim, collisions
-- [ ] `specs/terminal.md` — rewrite `Current` against the real tmux config; Ghostty gaps
-- [ ] `specs/editor.md` — new: VS Code + Neovim + vim; the VSCodeVim vs vscode-neovim decision as a gap
-- [ ] `specs/desktop.md` — new: Brave, Raycast, AltTab, Rectangle, Stats, Wispr Flow, Nextcloud
-- [ ] `specs/agent-stack.md` — rewrite: omp primary + Claude Code CLI; verified `~/.omp/agent/config.yml`; dual-key rules; gate gaps
-- [ ] `specs/knowledge.md` — Syncthing owns vault, Nextcloud owns files; retire the 4 sync plugins
-- [ ] `specs/dotfiles.md` — correct the tmux management claim
-- [ ] `SYSTEM.md` — restack into Stack of record · Retired · Hygiene, with per-section verified dates
-- [ ] `AGENTS.md` — keyboard-first purpose, approval contract, output contract + Evaluation mode, gate named
-- [ ] `.claude/rules/*.md` — add `globs:` + `description:` beside `paths:`; symlink into `.omp/rules/`
-- [ ] `.omp/RULES.md` — sticky hard constraints (needs approval: touches live agent behaviour)
-- [ ] `.omp/config.yml` — `bash.patterns` commit/push gate + `tools.approval.eval` (needs approval)
-- [ ] `.claude/settings.json` — matching `permissions.deny` for git commit/push
-- [ ] `GLOSSARY.md` — disambiguate **note**, fix the 3 malformed table rows, drop dead harness vocabulary
-- [ ] `README.md`, `specs/README.md` — layout without `notes/`; new domains
-- [ ] remove `notes/`
-- [ ] `changes/BACKLOG.md` — close tmux row; add second-brain, keyboard and Ghostty rows
-- [ ] `scripts/check.sh` — move out of the skill dir; add gates (link parser, trailing whitespace, sticky rule present, terminology)
+- [x] `changes/0004-keyboard-first-context-restack.md` — this file
+- [x] `specs/keyboard.md` — new: six layers, active Karabiner profile, tmux keys, Vimium, Obsidian vim, VS Code vim, six documented collisions, KLM invariant
+- [x] `specs/terminal.md` — Ghostty + tmux corrected against the live files
+- [x] `specs/editor.md` — new: VS Code + Neovim + vim; the VSCodeVim vs vscode-neovim decision as a gap
+- [x] `specs/desktop.md` — new: Brave, Raycast, AltTab, Rectangle, Stats, Wispr Flow, Nextcloud
+- [x] `specs/agent-stack.md` — omp primary + Claude Code CLI, per-harness loading table, measured context budget
+- [x] `specs/knowledge.md` — Syncthing owns the vault, Nextcloud owns files; 4 plugins retired; second-brain gap filed
+- [x] `specs/README.md` — eight domains, gap-closing convention
+- [x] `SYSTEM.md` — Stack of record · Retired · Hygiene
+- [x] `AGENTS.md` — keyboard-first north star, stack table, approval contract, output contract + Evaluation mode, gate named
+- [x] `.claude/rules/*.md` — `globs:` + `description:` added beside `paths:`; `.omp/rules/*` symlinks
+- [x] `.omp/RULES.md` — sticky hard constraints
+- [x] `.omp/config.yml` — bash deny/prompt gate + `tools.approval.eval`
+- [x] `.claude/settings.json` — `Bash(git commit:*)`, `Bash(git push:*)`, `Bash(git reset --hard:*)` denied
+- [x] `GLOSSARY.md` — **note** disambiguated, malformed rows fixed, keyboard vocabulary + KLM added
+- [x] `README.md` — keyboard-first framing, new layout, stack table
+- [x] `notes/` removed
+- [x] `changes/BACKLOG.md` — rebuilt: 6 new keyboard rows, closed items struck, second-brain row deferred by Luis
+- [x] `scripts/check.sh` — moved out of the skill dir, 13 gates
+- [x] `.claude/skills/{verify-repo,vault-note}/SKILL.md` — new gate path, no `notes/` routing
+- [ ] Machine-side follow-ups are **not** in this change: uninstall the retired tools, bring Karabiner under `devSetup`, bind Ghostty's quick terminal, resolve the `ctrl+h`/`ctrl+l` collision (BACKLOG 21–24, 13, 7)
 
 ## Verification
 
@@ -180,4 +185,97 @@ readlink ~/.config/tmux/tmux.conf                 # -> devSetup path, recorded i
 
 ## Outcome
 
-Pending.
+Executed 2026-09-17. `scripts/check.sh` → 13 gates, **clean, exit 0**.
+
+### Measured delta
+
+| Metric | Before | After |
+|---|---|---|
+| Rules reaching omp | 0 of 3 | 3 of 3 — verified in a fresh session: `omp -p 'read rule://vault …'` → `# Working with the Obsidian vault` (previously `Unknown rule: vault`) |
+| Rule files per harness | 1 set, 1 harness | 1 set, 2 harnesses (`paths:` + `globs:` + `description:` in one physical file, symlinked) |
+| Gate checks | 9 | 13 (+ rule loading, hook executability, commit gates, terminology, `notes/` absence) |
+| Verified-false machine claims | 5 | 0 — all corrected against the live files |
+| Keyboard layer specs | 0 | 1 spec, 6 layers, 6 documented collisions, 9 gaps |
+| Deterministic commit gate | none | `bash.patterns` deny (omp) + `permissions.deny` (Claude Code) |
+| Instruction-layer breadth | 5 agents claimed | 2 harnesses, each labelled with what it actually loads |
+| omp always-on context | 1588 tok (claimed, method unrecorded) | **1969 tok** — `tiktoken o200k_base`: `AGENTS.md` 1752 + 3 skill descriptions 148 + 3 rule descriptions 69. The ≤1200 target in Verification is **not met** |
+
+### Verified, not assumed
+
+- **`bash.patterns` keys were wrong on the first attempt and failed silently.** The initial config used
+  `pattern:`/`policy:` (the shape in `omp://approval-mode.md`'s prose); the settings schema wants
+  `match:` + `approval:`. Proof, throwaway git repo under `$HOME` with `match: "echo GATED*"` /
+  `approval: deny`:
+
+  ```
+  Reason: Blocked by bash pattern: echo GATED*
+  No command output — the call was blocked by policy before execution.
+  ```
+
+  With `pattern:`/`policy:` the same command **ran**. A gate written from prose, not from the schema, is
+  worse than no gate: it reads as protection and is inert. `.omp/config.yml` now carries the schema
+  form and a comment recording the trap.
+- Link-check false negative proven and fixed: greedy `sed` returned only the last link on a line
+  (`see [b](./nope.md) and [a](./real.md)` → `./real.md`), so an earlier broken link passed. `grep -o`
+  now extracts every link.
+- **The gate was negative-tested, not just run green.** Ten defects injected into a `cp -a` copy of the
+  repo; all ten produced a `FAIL` and exit 1: broken `@AGENTS.md` import · broken relative link · a
+  rule **copied** instead of symlinked into `.omp/rules/` · a rule missing `globs:` · hook exec bit
+  removed · `git push` rule deleted from `.omp/config.yml` · `spec-first` reintroduced into live
+  guidance · `notes/` recreated · a spec's `## Gaps` heading renamed · `AGENTS.md` pushed to 245 lines.
+  Two first-round "misses" were faults in the test, not the gate: prepending a line still left the
+  import inside the `head -5` window, and the terminology injection replaced a string README does not
+  contain (`keyboard-first` appears only capitalised). Re-tested with the real failure modes — import
+  line deleted, term written into `specs/shell.md` — both caught.
+- Known slack, deliberate: gate 2 accepts `@AGENTS.md` anywhere in the first five lines, not strictly
+  line 1.
+- Link gate over-fired once it was fixed: prose *about* link syntax in this file's own Outcome counted
+  as two broken links. Fenced blocks and inline code spans are now stripped before matching, so
+  documentation about markdown cannot fail the gate.
+- The repo changed under this session: `0003-ghostty-tmux-integration` landed Ghostty + the full tmux
+  config while these specs were being written, and `specs/terminal.md` was rewritten twice. Live
+  `~/.config/ghostty/config` is **678 B with 11 lines**, while 0003's Outcome records 1237 B including
+  `command = tmux new-session -A -s dev`; the discrepancy is recorded in `specs/terminal.md` rather
+  than silently reconciled.
+- **The `notes/` removal was incomplete and the gate could not see it.** `.claude/hooks/block-vault-writes.sh`
+  still told the model "Write the note to notes/ instead" in both block messages — the one piece of
+  dead routing that reaches the model at the moment it is deciding what to do instead. Gate 12 scanned
+  `*.md` only, so hook stderr was outside its file set. Hook text rewritten (repo docs → spec/change
+  file; real vault note → Luis names the path and runs the write), and gate 12 now greps
+  `.claude/hooks/*.sh` + `.claude/settings.json`. Negative-tested: re-injecting `notes/` into the hook
+  produces `FAIL dead reference in a hook or settings` and exit 1.
+- **The ≤1200-token acceptance line contradicted this change's own Baseline** ("Context size is *not*
+  the problem: 1588 tok ≈ 0.8 % of a 200k window") and was never measured at close. Measured now with
+  `tiktoken o200k_base`: 1969 tok — the restack **grew** the always-on layer by 24 %, because
+  `AGENTS.md` went 107 → 125 lines. Not silently trimmed: the two duplications are named with costs in
+  `specs/agent-stack.md` → Gaps 9 and deferred to `BACKLOG 33`, since dropping locked contract text is
+  Luis's call. The 1588 figure carried no method, so before/after are only comparable in order of
+  magnitude.
+- **Two gaps in `specs/agent-stack.md` were falsified by this change's own gate and still stood.**
+  Gap 3 claimed `check.sh` never asserts the hook exists (gate 11 does) and gap 8 claimed no
+  terminology check (gate 12 does). Folding a change into specs means re-reading the gaps the change
+  closed, not only adding new ones; both rewritten to what is still missing (the block firing is
+  asserted by shape only; no `[UNVERIFIED]`/drift/date-freshness checks).
+
+### Surprises
+
+1. **An agent will not execute a command its own rules forbid, even for a gate test.** Three attempts
+   to obtain the literal block text for `git push --dry-run` produced a cited refusal instead. The
+   mechanism had to be proven in a throwaway repo with a harmless pattern. A gate assertion therefore
+   belongs in `scripts/check.sh` as a config-shape check, not as a live destructive-command attempt
+   (BACKLOG 27).
+2. **Tab-as-Ctrl was documented as active for twelve days and is not.** The selected Karabiner profile
+   is `Neo_QWERTZ_onlyMod3` with 3 of 9 rules enabled; Tab-as-Ctrl and layer 6 live in the unselected
+   `Neo_QWERTZ_full`. Nobody reads a 1 MB JSON file, which is exactly why the keyboard layer needed a
+   spec.
+3. **Session-persistence already existed** (resurrect + continuum, restore on, 5-minute interval) while
+   `SYSTEM.md` claimed "no session-persistence story". The stale claim was three days old.
+4. **`notes/` never held a note.** The Diátaxis explanation tier was created in 0001 and its only note
+   was moved to the vault in the same change; it stayed in four files as a routing target for twelve
+   days. Removed, and the gate now fails if it reappears.
+
+### Folded into
+
+`specs/keyboard.md` (new), `specs/editor.md` (new), `specs/desktop.md` (new), `specs/agent-stack.md`,
+`specs/terminal.md`, `specs/knowledge.md`, `specs/README.md`, `SYSTEM.md`, `AGENTS.md`, `GLOSSARY.md`,
+`README.md`, `changes/BACKLOG.md`.
