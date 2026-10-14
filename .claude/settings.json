@@ -1,8 +1,6 @@
 {
   "permissions": {
     "deny": [
-      "Edit(vault/**)",
-      "Edit(//Users/luis/luis_obsidian_vault/**)",
       "Read(vault/.obsidian/**)",
       "Read(vault/.trash/**)",
       "Bash(git commit:*)",
@@ -16,19 +14,6 @@
       "Bash(readlink:*)",
       "Bash(./scripts/check.sh)",
       "Bash(scripts/check.sh)"
-    ]
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-vault-writes.sh"
-          }
-        ]
-      }
     ]
   }
 }

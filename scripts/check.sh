@@ -128,10 +128,12 @@ for s in .agents/skills/*/SKILL.md; do
 done
 
 echo "11. deterministic gates present"
-if [ -x .claude/hooks/block-vault-writes.sh ]; then
-  pass "vault-write hook present and executable"
+# Vault-write hook retired by decision in changes/0007 (Claude may edit the vault). Its absence is
+# asserted so a stale registration cannot silently block again.
+if grep -q 'block-vault-writes' .claude/settings.json || [ -e .claude/hooks/block-vault-writes.sh ]; then
+  fail "vault-write hook reappeared — retired in changes/0007"
 else
-  fail ".claude/hooks/block-vault-writes.sh missing or not executable (a hook that cannot start does not block)"
+  pass "no vault-write hook (retired, 0007)"
 fi
 miss=""
 for op in commit push reset; do

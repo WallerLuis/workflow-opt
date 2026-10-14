@@ -21,8 +21,8 @@ Verified 2026-10-13.
 - omp 18.5.0 is still installed but **retired as a harness** (`SYSTEM.md` → Retired). If launched here it
   would still read `AGENTS.md` and `.agents/skills/`, but no repo asset targets it.
 - Repo assets: `AGENTS.md` (canonical), `CLAUDE.md` (`@AGENTS.md`), three rules in `.agents/rules/`,
-  three skills in `.agents/skills/`, one pi extension (`.pi/extensions/git-guard.ts`), one Claude
-  `PreToolUse` hook (`.claude/hooks/block-vault-writes.sh`, 52 lines, `-rwxr-xr-x`), one gate script.
+  three skills in `.agents/skills/`, one pi extension (`.pi/extensions/git-guard.ts`), one gate
+  script. No Claude hooks: the vault-write `PreToolUse` hook was removed in 0007.
 - Machine-wide assets outside this repo: `~/.claude/commands/write-ticket.md` (9.7 KB). No user-level
   `~/.claude/CLAUDE.md`, no `~/.pi/agent/AGENTS.md`.
 - Account switching: `~/.local/bin/claude-swap` / `cswap`, aliased `cs`.
@@ -37,7 +37,7 @@ CLAUDE.md                          @AGENTS.md + Claude-only notes
 .claude/rules  -> ../.agents/rules    directory symlink
 .claude/skills -> ../.agents/skills   directory symlink
 .pi/extensions/git-guard.ts        pi gate
-.claude/settings.json              Claude gate (deny) + vault hook registration
+.claude/settings.json              Claude gate (deny: git ops, vault .obsidian/.trash reads)
 ```
 
 ### What each harness actually loads — observed 2026-10-13
@@ -49,7 +49,7 @@ CLAUDE.md                          @AGENTS.md + Claude-only notes
 | skills, `.agents/skills/` | ✅ native Agent Skills location (pi docs/skills.md). Observed: `new-change, vault-note, verify-repo` listed | ✅ through the `.claude/skills` directory symlink. Observed: `new-change, vault-note, verify-repo` |
 | rules, `.agents/rules/` | **no rule mechanism** — reached through the *Path rules* pointer table in `AGENTS.md`; advisory | ✅ through the `.claude/rules` directory symlink; `paths:` triggers on read. Observed: reading `specs/shell.md` → rule `# Editing specs and SYSTEM.md` present |
 | `.pi/extensions/git-guard.ts` | ✅ `tool_call` handler, `{ block: true }`. Observed in this repo without `--approve`: `git push is blocked in workflow-opt (AGENTS.md → Approval contract 2)…` | ✗ |
-| `.claude/settings.json` deny + `PreToolUse` hook | ✗ | ✅ (`Edit(path)` rules only; `Write(...)` entries are inert) |
+| `.claude/settings.json` deny | ✗ | ✅ (`Edit(path)` rules only; `Write(...)` entries are inert) |
 
 The two "observed" Claude rows rest on the model's own report in `claude -p`, not on a debug dump —
 strong but not instrumented evidence.
@@ -88,8 +88,9 @@ pi. Skill bodies (vault-note 856, new-change 559, verify-repo 372 tok) on invoke
   Heuristic, not measurement.
 - No rule contradicts another. Contradictions are resolved by deletion, not emphasis.
 - A requirement that must hold deterministically is a **gate**, not prose: `git-guard.ts` for pi,
-  `permissions.deny` + `PreToolUse` for Claude Code. Context files are advisory.
-- Agent-authored writes never land in the Obsidian vault unless the task names a vault path.
+  `permissions.deny` for Claude Code. Context files are advisory.
+- Agent-authored writes never land in the Obsidian vault unless the task names a vault path. Prose
+  only, in both harnesses, by decision (0007): vault limits get gated only after a real failure.
 - No harness other than pi and Claude Code gets config in this repo; omp and Codex config directories
   must not reappear (gate 12).
 
@@ -97,8 +98,8 @@ pi. Skill bodies (vault-note 856, new-change 559, verify-repo 372 tok) on invoke
 
 1. No user-level context file for either harness (`~/.claude/CLAUDE.md`, `~/.pi/agent/AGENTS.md`) →
    personal preferences are re-stated per project or lost.
-2. The vault write guard binds Claude Code only. pi has prose (`AGENTS.md`, `.agents/rules/vault.md`)
-   but no gate — `git-guard.ts` covers git only, by decision (0006).
+2. ~~The vault write guard binds Claude Code only~~ — resolved 0007: guard removed, both harnesses
+   equal (prose only).
 3. Gates are asserted by **shape** in `scripts/check.sh` gate 11; that they fire was proven once by hand
    (0004, 0006). `BACKLOG 27`.
 4. MCP set differs per agent and per project; the context7 key is plaintext (`SYSTEM.md` → Hygiene 1).
@@ -113,3 +114,5 @@ pi. Skill bodies (vault-note 856, new-change 559, verify-repo 372 tok) on invoke
     trigger. A rule-loader extension was declined in 0006 (no plugin).
 11. pi project trust is inherited from a broad ancestor entry (`/Users/luis/home/luis`) — every repo
     under it auto-loads its `.pi/extensions/`, including untrusted clones.
+12. No mobile access to the agent stack. Research on the phone runs in the ChatGPT app; no pi instance
+    is reachable from the iPhone, so phone research cannot use repo context or write into a repo.

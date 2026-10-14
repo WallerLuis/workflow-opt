@@ -26,12 +26,6 @@ Default is read-only: do not write here unless the task calls for a vault note o
 vault path. This repo keeps no notes directory — documentation about the repo itself belongs in
 `AGENTS.md`, a spec, or a change file.
 
-When you do write:
-
-- Place general-knowledge notes in the **topical folder**, beside their siblings — not in one
-  catch-all directory. See the `vault-note` skill.
-- Match the convention exactly: filename, H1, 7-key frontmatter, full-path wikilinks. Copy the shape
-  from `901 Template/920 template permanent note.md`.
-- Register the note in its owning MOC and in the closest related note's `# Links`.
-- Append only. Never restructure an existing note beyond the edit you were asked for.
-- Vault files are outside git — there is no diff and no undo. State every path you touched in chat.
+When you do write: read `vault/000 Index/Vault Conventions - Naming, Frontmatter, Links, MOC, Size,
+Sources - DOC.md` first — it is the single source for note rules, including what agents may change.
+Procedure: `vault-note` skill. Vault files are outside git — no diff, no undo; state every touched path.

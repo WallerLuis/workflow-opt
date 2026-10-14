@@ -1,65 +1,38 @@
 ---
 name: vault-note
-description: Write a teaching or reference note in Obsidian vault format. Use when an explanation is long enough to belong in the vault, when the user asks to document a concept, or when a change produced knowledge worth keeping.
+description: Write, reformat or split a note in the Obsidian vault. Use when an explanation is long enough to belong in the vault, when the user asks to document a concept, to reformat/split a note or a pasted section, or when a change produced knowledge worth keeping.
 ---
 
 # vault-note
 
-## Step 1 — decide where it goes
+## Step 0 — read the standard
 
-Route by **subject**, and everything teaching-shaped goes to the vault:
+Read `vault/000 Index/Vault Conventions - Naming, Frontmatter, Links, MOC, Size, Sources - DOC.md`.
+It is the single source for naming, frontmatter, linking, size, splitting and what agents may change.
+Never rely on a remembered copy; the note evolves (see its `# Changelog`).
 
-| Subject | Location |
-| --- | --- |
-| General knowledge — a tool, a concept, a technique | the **topical vault folder**, beside its siblings, under the owning MOC |
-| This repo's own contract, structure or verification | not a note — `AGENTS.md`, the matching `specs/*.md`, or the change file |
+## Action: write a new note
 
-Find the topical folder by grepping `vault/` for existing notes on the subject, then place the new
-note in the same directory. Examples: tmux → `600 Knowledge/Software-IT - General/linux - Unix/`;
-prompting and agents → `600 Knowledge/Software-IT - General/Agentic Development - Prompting/`;
-macOS, Raycast, keyboard workflow → `300 Resources - future/340 Workflow Documentation - Home lab/`.
+1. Place by subject: grep `vault/` for siblings, put the note in their topical folder. Examples:
+   tmux → `600 Knowledge/Software-IT - General/linux - Unix/`; prompting, agents →
+   `600 Knowledge/Software-IT - General/Agentic Development - Prompting/`; macOS, Raycast, keyboard
+   workflow → `300 Resources - future/340 Workflow Documentation - Home lab/`.
+2. Copy frontmatter and skeleton from `901 Template/920 template permanent note.md` (MOC: `921`).
+   Never retype from memory.
+3. Set `Parent` to the nearest parent note. Add context links (link + 1–3 sentences) under `# Links`
+   for sideways relations.
+4. Content bar: fundamental → mechanism → alternatives with the deciding tradeoff → primary sources
+   → links to notes Luis already has (grep first).
 
-A general note dropped anywhere no MOC points at is unfindable — retrieval here is by MOC link.
+## Action: reformat `<note>#<section>` (only when asked)
 
-## Step 2 — copy the template
-
-Read `901 Template/920 template permanent note.md` through the `vault/` symlink and copy the
-frontmatter verbatim. Do not retype it from memory.
-
-## Convention (verified; full rules in `GLOSSARY.md`)
-
-- Filename: full descriptive Title Case title, ` - ` between topic and facets, comma-separated keyword
-  tail. Spaces and commas allowed. No dates, no numeric prefix, no kebab-case.
-  Example: `tmux Session Persistence - Client-Server Model, Reboot, Resurrect, Continuum, tmuxp - DOC.md`
-- H1 must equal the filename exactly (`filename-heading-sync` is installed).
-- Frontmatter: 7 keys in order — `Created`, `Title`, `tags`, `Parent`, `Children`, `MOC`, `date`.
-  `tags` is the single literal `"#note/"`. `MOC` points at the owning hub note.
-- Body: `# <filename>` → `# Summary` → `# Notes` → optional `# TODO` → `# Links` → `# Sources`.
-- Internal links: wikilink with **full vault-relative path plus alias** —
-  `[[600 Knowledge/Software-IT - General/linux - Unix/tmux - terminal multiplexer|tmux - terminal multiplexer]]`
-- External links: markdown, or a `> [!info]` callout with the URL.
-- German/English mixing is fine: German for personal/legal/lecture material, English for technical.
-- Never emit `<% tp… %>` Templater syntax, and never copy the pre-2026 `Erstellt:`/`#para/` style.
-
-## Step 3 — link it both ways
-
-Retrieval in this vault is by MOC link, not by tag. An unlinked note does not exist.
-
-- Add a wikilink to the new note under `# Links` in the closest related existing note **and** in the
-  MOC named in the frontmatter.
-- Link outward from the new note to the notes it builds on.
-- Append only. Never restructure an existing note beyond the line you were asked to add.
-
-## Content bar
-
-Luis is learning the field top-to-bottom. A note earns its place only if it has:
-
-1. the fundamental (why this exists, what problem class it solves),
-2. the mechanism (how it actually works),
-3. alternatives with pros/cons and the deciding tradeoff,
-4. primary sources — papers, specs, official docs, named practitioners, with links,
-5. wikilinks to the vault notes he already has on the topic (grep `vault/` first).
+Structure only, unless Luis's request adds content guidance:
+- headings into the note's hierarchy (no H1 inside the body), markdown, code fences;
+- full-path aliased links, `Parent` set, tracking params stripped;
+- over the size limit → propose a split per the standard's *Splitting* table; split only after Luis
+  confirms which shape.
+Never delete or rewrite Luis's own text without being asked. Report every change.
 
 ## Afterwards
 
-Vault files are outside git. State every vault path you created or edited, explicitly, in chat.
+Vault files are outside git. State every vault path created or edited, in chat.

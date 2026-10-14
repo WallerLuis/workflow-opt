@@ -8,7 +8,7 @@ file exists to import the canonical contract. Keep Claude-only content below, sh
 - Harnesses here: pi and Claude Code. Canonical files live in `.agents/`; Claude reaches them through
   directory symlinks — `.claude/rules -> ../.agents/rules`, `.claude/skills -> ../.agents/skills`.
   Edit the file in `.agents/`, never replace a symlink with a copy (`scripts/check.sh` fails on it).
-- Claude-only assets: `.claude/settings.json` deny rules, `.claude/hooks/block-vault-writes.sh`, and
+- Claude-only assets: `.claude/settings.json` deny rules (git gate; vault is writable since 0007) and
   the automatic `paths:` trigger on rules. pi gets the rules through the pointer table in `AGENTS.md`.
 - Use plan mode for anything touching `~/devSetup`, `~/.zshrc`, `~/.claude/`, `~/.pi/`, or Karabiner.
   Those alter the live machine and are hard to unwind.

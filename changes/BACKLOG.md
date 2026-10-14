@@ -29,7 +29,7 @@ that only tidies.
 
 | # | Candidate | Spec | Gap | Lev | Effort |
 | --- | --- | --- | --- | --- | --- |
-| 25 | Document the second brain: dedicated spec (PARA semantics, capture paths, daily-note/template flow, MOC discipline, plugin roles) + a vault explanation note under the Workflow MOC. **Deferred from 0004 by Luis** | knowledge | knowledge#8 | H | half day |
+| 25 | Document the rest of the second brain: capture paths (QuickAdd, Quick Note, daily `# Tasks`), daily-note/periodic flow, plugin roles — into the conventions note or Obsidian MOC. Conventions, PARA, MOC/Parent discipline done in 0008 | knowledge | knowledge#8 | M | 2 h |
 | 14 | Decide Neovim: real config (it is `$EDITOR`/`$VISUAL` and pi's `Ctrl+G` target, still stock defaults) vs uninstall `vscode-neovim` and stay on VSCodeVim. First win: an autocmd for the harness's prompt-draft temp files | editor | editor#1, editor#2 | H | half day |
 | 11 | tmux session workflow for parallel agent runs — nothing auto-attaches since the Ghostty `command` line was dropped, so sessions are started by hand; pick a session-per-project picker (`sesh`/sessionizer) and check its prefix against the Neo2 layers | terminal, keyboard | terminal#4 | H | 2 h |
 | 26 | Keystroke baseline: instrument the five most repeated tasks (open project, switch pane, jump to file, capture a note, start an agent) with the keystroke-level model, so keyboard changes can be justified numerically | keyboard | keyboard#8 | H | 2 h |
@@ -56,3 +56,5 @@ that only tidies.
 | 20 | macOS `defaults write` automation: function-key behaviour, Caps-Lock mapping, Spaces auto-rearrange — the settings the keyboard layer silently depends on | dotfiles, desktop | dotfiles#4, desktop#6 | L | half day |
 | 31 | Decide tiling: keep Rectangle vs AeroSpace (no SIP change, emulates its own workspaces) vs yabai (partial SIP disable) vs Amethyst | desktop | desktop#3 | L | half day |
 | 32 | Audit the 15 Brave extensions and ~100 VS Code extensions against actual use | desktop, editor | desktop#5, editor#6 | L | 1 h |
+| 36 | Phone access to the agent stack: a pi instance reachable from the iPhone (remote host + SSH/tmux client or web front-end) for research that today runs in ChatGPT, able to write into a repo. Conventions editing on phone explicitly **out of scope** | agent-stack | agent-stack#12 | M | days |
+| 37 | `scripts/vault-lint.sh` (read-only): count violations per MUST rule of the vault conventions (size, frontmatter keys, `Parent`, `<% tp`, legacy inline fields, unresolved `[[Daily Notes]]`) | knowledge | knowledge#10 | M | 1–2 h |

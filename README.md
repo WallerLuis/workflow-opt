@@ -21,7 +21,7 @@ changes/             one file per workflow change (the diff), BACKLOG.md ranks c
 scripts/check.sh     the verification gate — 13 checks, exit 0 or fix it
 .agents/rules/       path rules (Claude: auto via .claude/rules symlink · pi: pointer table in AGENTS.md)
 .agents/skills/      agent procedures (pi native · Claude via .claude/skills symlink)
-.claude/            Claude-only: settings.json deny rules, vault hook, rules/skills symlinks
+.claude/            Claude-only: settings.json deny rules (git), rules/skills symlinks
 .pi/extensions/     pi-only: git-guard.ts — no commit, no push, no hard reset
 vault -> ~/luis_obsidian_vault   symlink, gitignored, read-by-default
 ```

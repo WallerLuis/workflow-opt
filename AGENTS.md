@@ -131,8 +131,8 @@ base; this repo is not a second one.
   `*.sync-conflict-*.md`, `Untitled*.md`, `.stfolder*`, `.DS_Store`.
 - **Contains plaintext secrets** (`SYSTEM.md` → Hygiene). Never copy vault content into this repo
   without a secret scan; never echo an apparent key.
-- Read-only unless the task names a vault path. Full rules: `.agents/rules/vault.md`, procedure:
-  `vault-note` skill.
+- Read-only unless the task names a vault path. Note rules: single source `vault/000 Index/Vault Conventions
+  - Naming, Frontmatter, Links, MOC, Size, Sources - DOC.md`; procedure: `vault-note` skill.
 - A note goes where its readers look: general knowledge → its **topical vault folder** under the owning
-  MOC (retrieval here is by MOC link, not by tag). Register every new note in its MOC in the same action.
+  MOC (retrieval here is by MOC link, not by tag). Every new note gets `Parent` in the same action.
 - Vault files are outside git. State every vault path you touched, in chat.

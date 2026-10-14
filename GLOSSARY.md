@@ -50,7 +50,7 @@ retired here) · **Project Rules** (Cursor `.mdc`) · **path-specific custom ins
 spec kept and evolved with the change; *spec-as-source* — humans edit only the spec. This repo is
 **spec-anchored**: `specs/` persist, `changes/` are transient.
 
-## Vault vocabulary (observed conventions — do not invent new ones)
+## Vault vocabulary
 
 | Term | Meaning |
 |---|---|
@@ -59,25 +59,8 @@ spec kept and evolved with the change; *spec-as-source* — humans edit only the
 | **PARA** | Folder numbering: `000 Index`, `100 Projects - now`, `200 Areas - longterm`, `300 Resources - future`, `400 Archive`. Forte, *Building a Second Brain*, 2022. Vault uses the shape; no method note exists. |
 | **permanent note** | Zettelkasten-style atomic note. Template: `901 Template/920 template permanent note.md`. |
 
-Vault note rules, verified:
-
-- Filename = full descriptive title, Title Case, ` - ` separating topic from facets, comma-separated
-  keyword tail. Example: `Docker - Best Practices, Fundamentals, Commands, CLI, Configuration.md`.
-  Spaces and commas allowed. No dates, no numeric prefixes, no kebab-case.
-- Numeric prefixes are for **folders and templates only**.
-- H1 must equal the filename (`filename-heading-sync` plugin is installed).
-- Body skeleton: `# <filename>` → `# Summary` → `# Notes` → optional `# TODO` → `# Links` → `# Sources`.
-- Frontmatter: 7 keys, in order — `Created`, `Title`, `tags`, `Parent`, `Children`, `MOC`, `date`.
-  `tags` is almost always the single literal `"#note/"`. **Copy the exact shape from
-  `901 Template/920 template permanent note.md`; never retype it from memory.**
-- Links: wikilinks with **full vault-relative path plus alias** —
-  `[[600 Knowledge/…/Context Engineering - Science, Fundamental|Context Engineering - Science, Fundamental]]`.
-  External links: standard markdown, often in a ```cardlink block or `> [!info]` callout.
-- Attachments: sibling `attachments/` folder per topic, embedded with full path + size `|300`.
-- German and English mix inside one note is normal: German for lectures/legal/personal, English for
-  technical.
-- Legacy notes (pre-2026) have no frontmatter and use `Erstellt:` + inline `#note #para/…`.
-  Some still contain unrendered `<% tp… %>` Templater syntax. Do not propagate either style.
+Vault note rules (naming, frontmatter, linking, size, agent limits): single source
+`vault/000 Index/Vault Conventions - Naming, Frontmatter, Links, MOC, Size, Sources - DOC.md`.
 
 Repo file naming: `kebab-case.md` inside `specs/` and `changes/`; the root contract files
 (`AGENTS.md`, `CLAUDE.md`, `README.md`, `SYSTEM.md`, `GLOSSARY.md`) and the fixed-name files
