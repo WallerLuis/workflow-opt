@@ -8,7 +8,8 @@
 - Mechanism: hand-rolled idempotent `link()` in `install.sh` (`ln -s`, pre-existing target moved to
   `~/.dotfiles-backup/<ts>/`). Verified 2026-09-15, extended 2026-09-17: it links
   `shell/zsh/.zshenv`, `shell/zsh/.zshrc`, `config/tmux/tmux.conf`,
-  `config/ghostty/config` → `~/.config/ghostty/config`, then runs
+  `config/ghostty/config` → `~/.config/ghostty/config`, `config/agents/AGENTS.md` →
+  `~/.pi/agent/AGENTS.md` and `~/.claude/CLAUDE.md` (added 2026-10-17, 0010), then runs
   `ghostty +validate-config` (a bad key or unknown theme is otherwise only visible as a GUI error
   dialog on next launch), loops `scripts/bin/*` into `~/.local/bin`, bootstraps tpm on a throwaway
   tmux socket, fetches the `tmux-fingers` release binary into the tpm clone
@@ -33,7 +34,8 @@
   that env lives in `.zshenv`.
 - Empty dirs: `os/macos/`, `languages/rust/`.
 - Unmanaged live state: `~/.zprofile`, `~/.gitconfig` (diverged — has aliases + `push.autoSetupRemote`),
-  `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*`, `~/.local/bin/*`,
+  `~/.p10k.zsh`, `~/.config/karabiner/`, `~/.claude/*` (except `CLAUDE.md`), `~/.pi/*` (except
+  `agent/AGENTS.md`), `~/.local/bin/*`,
   VS Code `settings.json` / `mcp.json` / `keybindings.json`. (`~/.tmux.conf` no longer exists; the
   XDG path is managed.)
 

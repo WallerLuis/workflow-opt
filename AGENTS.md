@@ -85,15 +85,9 @@ the diff. Skip the change file only for typo/format fixes.
 
 ## Output contract
 
-Default, always:
-
-- Information-dense. Grammar is subordinate to density — drop articles and copulas, fragments over
-  sentences, tables over prose.
-- Conclusion first, then evidence. Exact paths, commands, numbers.
-- No preamble, no restatement of the request, no summary of what you just did, no praise.
-- Uncertainty stated at the claim, never as a closing disclaimer.
-- Every claim about the machine, a file or a tool is verified in-session or marked `[UNVERIFIED]`.
-  Never invent a measurement; absent baseline → `baseline: not measured`.
+Default: user-scope context (`~/devSetup/config/agents/AGENTS.md`, loaded by both harnesses) defines
+density, conclusion-first, uncertainty and verification rules. Repo addition: absent baseline →
+`baseline: not measured`.
 
 **Evaluation mode** — on explicit request only (e.g. "evaluate all potential good solutions",
 "explain", "teach"). Then go wide and deep, still dense:
@@ -105,7 +99,7 @@ Default, always:
 - What top practitioners actually do, named — not anonymous consensus.
 - Link to what Luis already knows: grep `vault/` for the relevant note, cite its path.
 - Order: fundamental → mechanism → implementation → tradeoffs.
-- Long-form output belongs in a vault note under its owning MOC, not in chat and not in this repo.
+- Long-form output belongs in a vault note under its `Parent` chain, not in chat and not in this repo.
 
 ## Verification
 

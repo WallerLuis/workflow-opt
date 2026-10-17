@@ -23,8 +23,11 @@ Verified 2026-10-13.
 - Repo assets: `AGENTS.md` (canonical), `CLAUDE.md` (`@AGENTS.md`), three rules in `.agents/rules/`,
   three skills in `.agents/skills/`, one pi extension (`.pi/extensions/git-guard.ts`), one gate
   script. No Claude hooks: the vault-write `PreToolUse` hook was removed in 0007.
-- Machine-wide assets outside this repo: `~/.claude/commands/write-ticket.md` (9.7 KB). No user-level
-  `~/.claude/CLAUDE.md`, no `~/.pi/agent/AGENTS.md`.
+- Machine-wide assets outside this repo: `~/.claude/commands/write-ticket.md` (9.7 KB). User-scope
+  context: `~/.pi/agent/AGENTS.md` and `~/.claude/CLAUDE.md` are both symlinks to
+  `~/devSetup/config/agents/AGENTS.md` (3.2 KB: profile, output, explaining, decisions, sessions/modes,
+  pitfalls, boundaries) — 0010. Loaded from any cwd, observed 2026-10-17 (`pi -p`/`claude -p` in
+  `/tmp`, positive + negative control).
 - Account switching: `~/.local/bin/claude-swap` / `cswap`, aliased `cs`.
 
 ### Layout — canonical in `.agents/`, Claude reaches it by symlink
@@ -96,8 +99,8 @@ pi. Skill bodies (vault-note 856, new-change 559, verify-repo 372 tok) on invoke
 
 ## Gaps
 
-1. No user-level context file for either harness (`~/.claude/CLAUDE.md`, `~/.pi/agent/AGENTS.md`) →
-   personal preferences are re-stated per project or lost.
+1. ~~No user-level context file for either harness~~ — resolved 0010 (one devSetup file, two symlinks).
+   ChatGPT custom instructions (vault AI Personalisation note) are a manual mirror, not generated.
 2. ~~The vault write guard binds Claude Code only~~ — resolved 0007: guard removed, both harnesses
    equal (prose only).
 3. Gates are asserted by **shape** in `scripts/check.sh` gate 11; that they fire was proven once by hand

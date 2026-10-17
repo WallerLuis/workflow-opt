@@ -15,7 +15,6 @@ that only tidies.
 | 1 | Rotate + purge the API keys in the vault and in `Code/User/mcp.json` | knowledge, agent-stack | knowledge#1, SYSTEM Hygiene 1–2 | H | 30 min |
 | 13 | Turn off Warp telemetry + cloud conversation storage, or uninstall Warp and iTerm2 | terminal | terminal#3 | M | 10 min |
 | 7 | Disable the three retired Obsidian sync plugins (Syncthing owns the vault, decided 0004) | knowledge | knowledge#2 | H | 20 min |
-| 2 | Write user-scope context files (`~/.claude/CLAUDE.md`, `~/.pi/agent/AGENTS.md`): output contract, approval contract, evidence hierarchy — sourced from the vault's AI-Personalisation note | agent-stack | agent-stack#1 | H | 30 min |
 | 21 | Bind Ghostty's quick terminal (`keybind = global:cmd+backquote=toggle_quick_terminal`) — the config has **zero** keybind lines today; needs Accessibility permission | terminal, keyboard | terminal#1, keyboard#3 | H | 20 min |
 | 22 | Resolve the `ctrl+h`/`ctrl+l` collision: VS Code `terminalFocus` binds vs tmux root-table vim-tmux-navigator | keyboard, editor | keyboard#4, editor#3 | H | 30 min |
 | 23 | Decide one Karabiner profile (`Neo_QWERTZ_onlyMod3` vs `Neo_QWERTZ_full`) and enable or delete the 11 disabled rules; Tab-as-Ctrl is currently documented but inactive | keyboard | keyboard#1 | H | 1 h |
@@ -58,3 +57,9 @@ that only tidies.
 | 32 | Audit the 15 Brave extensions and ~100 VS Code extensions against actual use | desktop, editor | desktop#5, editor#6 | L | 1 h |
 | 36 | Phone access to the agent stack: a pi instance reachable from the iPhone (remote host + SSH/tmux client or web front-end) for research that today runs in ChatGPT, able to write into a repo. Conventions editing on phone explicitly **out of scope** | agent-stack | agent-stack#12 | M | days |
 | 37 | `scripts/vault-lint.sh` (read-only): count violations per MUST rule of the vault conventions (size, frontmatter keys, `Parent`, `<% tp`, legacy inline fields, unresolved `[[Daily Notes]]`) | knowledge | knowledge#10 | M | 1–2 h |
+| 38 | `Parent` backfill: script proposes `Parent` = the single MOC linking a note (283 notes), Luis picks for the 44 multi-MOC notes; batch approval, backup first. Target 106 → ~433 filled | knowledge | knowledge#11 | H | 1–2 h |
+| 39 | Obsidian CLI for agents: test search / backlinks / properties via `obsidian` CLI; if it works, document in `vault-note` skill as preferred retrieval over grep. After BACKLOG 1 (secrets) | knowledge, agent-stack | knowledge#12 | M | 1–2 h |
+| 40 | Inbox skill: process `900 Quick Note` (57) — propose folder, `Parent`, split; Luis confirms each | knowledge | knowledge#13 | M | 1 h |
+| 41 | Summary-first reading: rule in conventions (agents read `# Summary` before the body); Luis writes summaries, agent may draft on request (280 empty) | knowledge | knowledge#14 | M | 5 min + ongoing |
+| 42 | Quiz-me skill: agent asks ~5 questions on a note/section, Luis answers closed-book, gaps → note or flashcards (retrieval practice, Roediger & Karpicke 2006) | knowledge | knowledge#15 | H | 1 h |
+| 43 | Session → vault distill: `vault-note distill` action — agent drafts one section with context links from the session, Luis edits | knowledge | knowledge#16 | M | 30 min |

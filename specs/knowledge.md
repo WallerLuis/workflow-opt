@@ -71,3 +71,11 @@ Obsidian vault, its sync, and the linkage between vault and this repo.
 10. Legacy leftovers after 0008 (2026-10-14): 12 notes with body-level inline fields (`MOC::`,
     `Children:`) from an old template; 27 old daily notes link `[[Daily Notes]]` in their nav bar
     (unresolved); 41 `<% tp`; 89 notes > 400 lines / 66 > 20k chars. No lint script yet.
+11. Hierarchy coverage (2026-10-14, 1502 non-daily notes): `Parent` filled in 106; of 1396 without,
+    283 are linked from exactly 1 MOC, 44 from > 1, **1069 from none** — unreachable by MOC/`Parent`.
+12. Agents retrieve by grep only; Obsidian's own index (search, backlinks, properties) is unused.
+    `obsidian` CLI is on PATH (`obsidian --help` → "Obsidian CLI"); capabilities `[UNVERIFIED]`.
+13. Capture inbox `900 Quick Note`: 57 notes, no processing routine.
+14. 280 notes have an empty `# Summary`; agents cannot read summary-first.
+15. No retrieval-practice loop: `flashcards-obsidian` + template `945` installed, use `[UNVERIFIED]`.
+16. No session → vault distill step (`<VAULT>` mode in the Workflow MOC is unbuilt).
