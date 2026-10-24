@@ -43,21 +43,35 @@ Everything else carries `[UNVERIFIED]`.
 
 ### Nextcloud (Unraid)
 
-- Image `lscr.io/linuxserver/nextcloud`, set to `previous-version-32.0.11`. Was `latest`, which pulled
-  35.0.2 over 32.0.5 data → refused to start (one major per upgrade).
-- **Down**: `maintenance => true`, `version => 32.0.5.0`. Upgrade to 32.0.11 failed at migration
-  `34000Date20260318095645`: `must be owner of table oc_jobs`.
+- **Up, 35.0.2.2** (`occ status` 2026-10-25: `maintenance: false`, `needsDbUpgrade: false`), PHP 8.5.12.
+  Upgraded 32.0.5 → 35.0.2 in 0011.
+- Image `lscr.io/linuxserver/nextcloud:version-35.0.2` (pinned, no patch updates). Unraid auto-update
+  plugin state `[UNVERIFIED]`.
+- Cron: `busybox crond` in container, `cron.php` as `abc`, `backgroundjobs_mode` = `cron`.
+- Apps disabled: `notes` 6.1.0, `richdocuments` 12.0.1 (disabled as incompatible during upgrade), plus
+  shipped-off apps (admin_audit, encryption, suspicious_login, user_ldap, files_antivirus, app_api,
+  twofactor_nextcloud_notification). Talk (`spreed`) not installed.
+- Log: `logfile => 'home/data/nextcloud.log'` (relative), `loglevel => 0`; actual file
+  `/data/nextcloud.log` (host `/mnt/user/NextcloudShare/nextcloud.log`), 516,332,470,669 B on
+  2026-10-25.
 - Public at `cloud.luiswaller.com`; `trusted_proxies` = `172.18.0.3` on Unraid network `proxynet`
   (container unidentified). Container port 443 → host 444.
 - Config `/mnt/user/appdata/nextcloud/www/nextcloud/config/config.php` (only config file; no `NC_*`
   env). Contains DB + Gmail SMTP credentials.
-- DB `nextcloud_db` on `postgresql15` (`192.168.2.3:5432`). Connects as `nextcloud_app`; database,
-  schema, 183 tables, 161 sequences owned by `nextcloud_owner` (NOLOGIN) → upgrade blocked.
-- Backup: `/mnt/user/backup/nextcloud-db-2026-10-24.sql`, 896 MB, 183 `CREATE TABLE` (taken after the
-  failed attempt). Appdata copy `[UNVERIFIED]`.
-- Upgrade path (tags verified on Docker Hub 2026-10-25): `previous-version-32.0.11` →
-  `previous-version-33.0.9` → `previous-version-34.0.5` → `version-35.0.2`. Each accepts the previous
-  major (`$OC_VersionCanBeUpgradedFrom` in `version.php`).
+- DB `nextcloud_db` on `postgresql15` (`192.168.2.3:5432`). Connects as `nextcloud_app`, which owns the
+  database, schema `public`, 201 tables and their sequences.
+- `db:schema:check -v`: extra indexes `fs_storage_path_prefix`, `fed_inv_open_email_uniq`,
+  `text_steps_doc_id_id_index`; `oc_share_external.id` autoincrement diff; 24 unattributed tables
+  (`oc_talk_*` ×17, `oc_ex_*` ×7).
+- serverinfo DB checks: cache hit ratio 64.4 %, largest table 106,637 dead tuples, `oc_share` > 1M
+  sequential scans; connections 8/100, latency 3.11 ms.
+- Backups in `/mnt/user/backup/` (DB dumps `600`; config copy `700`):
+  `nextcloud-appdata-2026-10-24/` (pre-upgrade, `755`), `nextcloud-db-2026-10-24.sql`,
+  `nextcloud-db-32.0.11-2026-10-24.sql`, `nextcloud-db-35.0.2-2026-10-25.sql` (896 MB, 201
+  `CREATE TABLE`), `nextcloud-config-35.0.2-2026-10-25/`. User files (`/mnt/user/NextcloudShare`) not
+  backed up.
+- LSIO tag scheme (Docker Hub, 2026-10-25): current major `version-X.Y.Z`, previous major
+  `previous-version-X.Y.Z`; older majors stop receiving images (no 32.0.12+, no 33.0.10).
 
 ### `postgresql15` roles
 
@@ -65,8 +79,8 @@ Everything else carries `[UNVERIFIED]`.
 |---|---|---|
 | db_admin | superuser | admin login |
 | nextcloud_user | superuser, createrole, createdb, replication, bypassrls | unknown; installer account `[UNVERIFIED]` |
-| nextcloud_owner | NOLOGIN | owns `nextcloud_db` |
-| nextcloud_app | — | Nextcloud's login |
+| nextcloud_owner | NOLOGIN | owns nothing since 0011 (`REASSIGN OWNED`); referenced by `OWNER TO` in pre-0011 dumps |
+| nextcloud_app | — | Nextcloud's login; owns `nextcloud_db` |
 | oc_luis | createdb | created by Nextcloud ≤ 30 installer (`oc_<admin>`); unused `[UNVERIFIED]` |
 | gitea | — | owns `gitea_db` |
 
@@ -83,8 +97,8 @@ Everything else carries `[UNVERIFIED]`.
 
 ## Gaps
 
-1. Nextcloud down: maintenance mode, upgrade blocked by table ownership (`nextcloud_owner` vs login
-   `nextcloud_app`).
+1. ~~Nextcloud down: maintenance mode, upgrade blocked by table ownership (`nextcloud_owner` vs login
+   `nextcloud_app`).~~ — closed 2026-10-25: 0011, `occ status` 35.0.2.2, maintenance false.
 2. Credentials pasted into an agent chat 2026-10-24: Gmail app password, Nextcloud DB password (weak).
 3. No patch routine: Proxmox host, HA, Unraid ~1 year unpatched; `latest` + auto-update caused the
    32→35 jump. No update notification.
@@ -93,8 +107,8 @@ Everything else carries `[UNVERIFIED]`.
 5. Ingress path for `cloud.luiswaller.com` unclear: SWAG (VM) vs the unidentified proxy `172.18.0.3`
    (Unraid). Version of that proxy unknown.
 6. Home Assistant: Core + OS updates pending; unsupported-OS repair open 9 months.
-7. Postgres role sprawl: `nextcloud_user` is superuser + createrole; `nextcloud_owner`, `oc_luis`
-   leftovers.
+7. Postgres role sprawl: `nextcloud_user` is superuser + createrole; `nextcloud_owner` (owns nothing
+   since 0011), `oc_luis` leftovers.
 8. Nextcloud config: `loglevel => 0` (debug), relative `logfile` path, 3 LSIO nginx confs older than
    shipped samples.
 9. PHP incident CVE unidentified → patch status of Nextcloud (PHP 8.5.12) and Unraid (8.3.29) unknown.
@@ -104,3 +118,11 @@ Everything else carries `[UNVERIFIED]`.
 12. Stale compose dirs without containers (`cal_com`, `n8n-ai-starter`, `umami`, `recovered*`): intent
     unknown.
 13. Proxmox host version and Debian VM patch level unknown.
+14. Nextcloud log never rotates: relative `logfile` → writes fall back to `/data/nextcloud.log`
+    (`Log/File.php`), rotation checks the configured path (`Log/Rotate.php`); with `loglevel 0` the file
+    reached ~516 GB in the user-data share. Pre-upgrade appdata copy is `755` and holds the old
+    `config.php`.
+15. Nextcloud schema drift: 3 extra indexes, 1 autoincrement diff, 24 orphan tables (Talk, old AppAPI
+    `[UNVERIFIED]`); `notes`/`richdocuments` disabled, usage unknown.
+16. `postgresql15` performance: 106,637 dead tuples after migrations; cache hit ratio 64.4 % with
+    measurement skewed by dumps; `shared_buffers` value and Unraid RAM unknown.
