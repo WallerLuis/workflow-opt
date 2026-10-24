@@ -32,5 +32,6 @@ renumber — backlog rows reference `<spec>#<number>`.
 | `knowledge.md` | Obsidian vault, sync, note conventions, repo↔vault linkage |
 | `shell.md` | zsh, prompt, aliases, toolchain managers |
 | `dotfiles.md` | `~/devSetup`, reproducibility, secrets |
+| `homeserver.md` | Proxmox (HA VM, Docker VM), Unraid, containers, ingress; backlog `changes/HOMESERVER-BACKLOG.md` |
 
 Add a domain only when a change needs one. Empty specs are noise.

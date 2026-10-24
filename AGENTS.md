@@ -26,6 +26,7 @@ Unit of work is a **workflow change**, not a feature.
 | Editors | VS Code + VSCodeVim; nvim / vim as `$EDITOR` | `specs/editor.md` |
 | Desktop | Brave + Vimium, Raycast, AltTab, Rectangle, Stats, Wispr Flow, Nextcloud | `specs/desktop.md` |
 | Second brain | Obsidian vault, Syncthing-synced | `specs/knowledge.md` |
+| Home server | Proxmox (HA, Docker VM), Unraid | `specs/homeserver.md` |
 | Shell | zsh + devSetup symlinks | `specs/shell.md` |
 | Dotfiles | `~/devSetup` | `specs/dotfiles.md` |
 
@@ -40,7 +41,7 @@ Anything not in this table is either retired (`SYSTEM.md` → Retired) or not pa
 | `GLOSSARY.md` | ubiquitous language, vault naming | before naming anything |
 | `specs/<domain>.md` | verified current state · invariants · gaps | before touching that domain |
 | `changes/NNNN-slug.md` | one decision per file; `archive/` when done | when opening or closing a change |
-| `changes/BACKLOG.md` | ranked candidates | when picking work |
+| `changes/BACKLOG.md` | ranked candidates; home server: `HOMESERVER-BACKLOG.md` | when picking work |
 | `.agents/rules/*.md` | path rules; Claude auto-loads via `.claude/rules` symlink, pi reads on the pointer below | before editing a matching path |
 | `.agents/skills/*/SKILL.md` | procedures; pi native, Claude via `.claude/skills` symlink | on invocation |
 | `.pi/extensions/git-guard.ts` | pi gate: blocks commit / push / hard reset | loaded by pi after project trust |
