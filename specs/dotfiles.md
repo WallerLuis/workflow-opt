@@ -24,6 +24,9 @@
 - Tracked and real: `Brewfile` (220 lines, includes ~100 `vscode "…"` extension lines),
   `shell/zsh/.zshrc`, `shell/zsh/.zshenv`, `config/{ghostty,git,nvim,tmux,raycast,ssh}`,
   `config/settings.json`, `editors/vscode`.
+- `~/.ssh/config` → `devSetup/config/ssh/config` (symlink via `link()`, mode 600; `install.sh` also
+  `chmod 700 ~/.ssh` and re-applies 600 because git stores only 644/755). Was an unlinked, drifted
+  copy until 2026-10-28 (`changes/archive/0014-*`).
 - `link()` compares `readlink "$dst"` against an **absolute** `$REPO/...` path. `~/.zshrc` is a
   *relative* symlink (`devSetup/shell/zsh/.zshrc`), so a re-run backs it up and relinks instead of
   reporting `ok`. Cosmetic today, but it makes `install.sh` non-idempotent in output.
