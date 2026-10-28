@@ -41,6 +41,7 @@ that only tidies.
 | 28 | Version the desktop keyboard layer: Vimium options export, Raycast hotkey/alias list, AltTab + Rectangle prefs → `devSetup` | desktop, keyboard | desktop#1, keyboard#7 | M | 2 h |
 | 29 | Verify Nextcloud: account, server, synced folders; prove no overlap with the vault tree | desktop | desktop#2 | M | 30 min |
 | 34 | Migrate `~/Nextcloud` to the spec: pilot `Important/Gesundheit` + `Arzt` (14 files), then one root per session; move 80 Git repos + `node_modules` out to the local code root with Git remotes + a safety-net backup (Time Machine or restic) for uncommitted experiments. Needs approval | nextcloud | nextcloud#1–3 | H | days |
+| 45 | Keyboard access to OSC 8 links: since 0012 pi renders markdown links as text only (URL in the cell, not on screen), so `C-b F` (tmux-fingers, regex on visible text) can't reach them — Cmd+Shift+click only. Candidates: tmux binding over `#{mouse_hyperlink}` / copy-mode hyperlink, fingers custom pattern, or pi-side setting to print the URL | terminal, keyboard | terminal#6 (appended when 0012 closes) | M | 30 min |
 | 35 | Test internal link `/f/<fileid>` across rename/move (desktop + iPhone); audit all link shares on the server (5 referenced in vault notes); revoke or set expiry | nextcloud | nextcloud#4–5 | M | 30 min |
 
 ## Later
@@ -63,3 +64,4 @@ that only tidies.
 | 41 | Summary-first reading: rule in conventions (agents read `# Summary` before the body); Luis writes summaries, agent may draft on request (280 empty) | knowledge | knowledge#14 | M | 5 min + ongoing |
 | 42 | Quiz-me skill: agent asks ~5 questions on a note/section, Luis answers closed-book, gaps → note or flashcards (retrieval practice, Roediger & Karpicke 2006) | knowledge | knowledge#15 | H | 1 h |
 | 43 | Session → vault distill: `vault-note distill` action — agent drafts one section with context links from the session, Luis edits | knowledge | knowledge#16 | M | 30 min |
+| 44 |  Secret importing evaluation & storage: api keys, bitwarden connect etc. | knowledge, agent-stack, dev-experience | knowledge#17 | H | 60 min |
